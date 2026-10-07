@@ -23,23 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // ── Validate inputs ────────────────────────────────────────────────────────
 
-$subject      = trim($_POST['subject']      ?? '');
-$preview_text = trim($_POST['preview_text'] ?? '');
-$body_html    = trim($_POST['body_html']    ?? '');
-$body_plain   = trim($_POST['body_plain']   ?? '');
+$subject         = strip_tags(trim($_POST['subject']         ?? ''));
+$preview_text    = trim($_POST['preview_text']    ?? '');
+$body_html       = trim($_POST['body_html']       ?? '');
+$body_plain      = trim($_POST['body_plain']      ?? '');
+$slug            = preg_replace('/[^a-z0-9\-]/', '', strtolower(trim($_POST['slug'] ?? '')));
+$publish_archive = !empty($_POST['publish_archive']) && $slug !== '';
 
 if ($subject === '' || $body_html === '') {
     die('Subject and body are required.');
 }
 
-// Strip tags from subject to avoid header injection
-$subject = strip_tags($subject);
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-// ── Load subscribers ───────────────────────────────────────────────────────
+// ── Load subscribers + save to archive ────────────────────────────────────
 
 try {
     $pdo = new PDO(
@@ -48,6 +47,32 @@ try {
         $db_pass,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS issues (
+        id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        slug         VARCHAR(120) NOT NULL UNIQUE,
+        title        VARCHAR(200) NOT NULL,
+        preview_text VARCHAR(200) NOT NULL DEFAULT '',
+        body_html    MEDIUMTEXT   NOT NULL,
+        body_plain   TEXT         NOT NULL DEFAULT '',
+        sent_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_sent (sent_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Save issue to archive if requested
+    $archive_url = '';
+    if ($publish_archive) {
+        $ins = $pdo->prepare("INSERT IGNORE INTO issues (slug, title, preview_text, body_html, body_plain) VALUES (:slug, :title, :preview, :html, :plain)");
+        $ins->execute([
+            ':slug'    => $slug,
+            ':title'   => $subject,
+            ':preview' => $preview_text,
+            ':html'    => $body_html,
+            ':plain'   => $body_plain,
+        ]);
+        $archive_url = 'https://failosaurusrex.com/archive/' . $slug;
+    }
+
     $rows = $pdo->query("SELECT email, token FROM subscribers WHERE confirmed = 1 ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die('Database error: ' . htmlspecialchars($e->getMessage()));
@@ -79,8 +104,8 @@ foreach ($rows as $row) {
     $token     = $row['token'];
     $unsub_url = 'https://failosaurusrex.com/unsubscribe.php?token=' . urlencode($token);
 
-    $full_html = build_email_html($preheader_html, $body_html, $unsub_url);
-    $full_text = build_email_text($body_plain ?: strip_tags($body_html), $unsub_url);
+    $full_html = build_email_html($preheader_html, $body_html, $unsub_url, $archive_url);
+    $full_text = build_email_text($body_plain ?: strip_tags($body_html), $unsub_url, $archive_url);
 
     try {
         $mail = new PHPMailer(true);
@@ -209,6 +234,11 @@ file_put_contents($log_dir . '/broadcast.log', $log_line, FILE_APPEND | LOCK_EX)
           </div>
         <?php endif; ?>
 
+        <?php if ($archive_url): ?>
+        <p style="margin-top:1.5rem;font-size:0.9rem;color:var(--fg-muted);">
+          Archived at: <a href="<?= htmlspecialchars($archive_url) ?>" style="color:var(--accent);"><?= htmlspecialchars($archive_url) ?></a>
+        </p>
+        <?php endif; ?>
         <a href="/admin/" class="btn" style="margin-top: 2.5rem; display:inline-block;">Compose another</a>
       </div>
     </section>
@@ -226,8 +256,25 @@ file_put_contents($log_dir . '/broadcast.log', $log_line, FILE_APPEND | LOCK_EX)
 
 // ── Helper functions ───────────────────────────────────────────────────────
 
-function build_email_html(string $preheader, string $body, string $unsub_url): string {
-    $unsub_esc = htmlspecialchars($unsub_url, ENT_QUOTES, 'UTF-8');
+function build_email_html(string $preheader, string $body, string $unsub_url, string $archive_url = ''): string {
+    $unsub_esc   = htmlspecialchars($unsub_url,   ENT_QUOTES, 'UTF-8');
+    $archive_esc = htmlspecialchars($archive_url, ENT_QUOTES, 'UTF-8');
+
+    $view_in_browser = '';
+    if ($archive_url !== '') {
+        $view_in_browser = <<<VIB
+
+        <!-- View in browser bar -->
+        <tr>
+          <td bgcolor="#110c08" style="background-color:#110c08;padding:12px 40px 0 40px;text-align:center;">
+            <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.5;color:#4d423a;mso-line-height-rule:exactly;">
+              <a href="{$archive_esc}" style="color:#4d423a;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">View this message in your browser</a>
+            </p>
+          </td>
+        </tr>
+VIB;
+    }
+
     return <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
@@ -250,7 +297,7 @@ function build_email_html(string $preheader, string $body, string $unsub_url): s
 
       <!-- ─── CONTAINER: max 600 px ─────────────────────────────── -->
       <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-
+{$view_in_browser}
         <!-- ╔══════════════════════════════════════════════════════╗
              ║  TOP ACCENT BAR — 4 px neon green                   ║
              ╚══════════════════════════════════════════════════════╝ -->
@@ -335,7 +382,8 @@ function build_email_html(string $preheader, string $body, string $unsub_url): s
 HTML;
 }
 
-function build_email_text(string $body, string $unsub_url): string {
-    $divider = str_repeat('-', 60);
-    return rtrim($body) . "\n\n{$divider}\nYou're receiving this because you signed up at https://failosaurusrex.com\nUnsubscribe: {$unsub_url}\n";
+function build_email_text(string $body, string $unsub_url, string $archive_url = ''): string {
+    $divider    = str_repeat('-', 60);
+    $view_line  = $archive_url !== '' ? "View in browser: {$archive_url}\n\n" : '';
+    return $view_line . rtrim($body) . "\n\n{$divider}\nYou're receiving this because you signed up at https://failosaurusrex.com\nUnsubscribe: {$unsub_url}\n";
 }
