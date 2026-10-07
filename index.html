@@ -153,7 +153,7 @@
         const data = await res.json();
 
         if (res.ok && data.ok) {
-          msg.textContent = 'Thanks — you\'re in.';
+          msg.textContent = 'Almost there — check your inbox to confirm.';
           msg.style.color = 'var(--accent)';
           e.target.reset();
         } else {
