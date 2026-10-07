@@ -1,11 +1,5 @@
 <?php
-/**
- * FRX Newsletter Broadcast — Admin Compose Page
- *
- * Password lives in frx-db-config.php as $admin_pass (bcrypt hash).
- * Session is started only after a correct password; everything else
- * redirects back to the login form.
- */
+ob_start();
 
 $config_path = dirname(__DIR__, 2) . '/frx-db-config.php';
 
