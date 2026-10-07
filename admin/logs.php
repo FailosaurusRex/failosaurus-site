@@ -50,6 +50,7 @@ if (file_exists($log_file)) {
         <ul class="nav-links">
           <li><a href="/admin/">Compose</a></li>
           <li><a href="/admin/subscribers.php">Subscribers</a></li>
+          <li><a href="/admin/library.php">Library</a></li>
           <li><a href="/admin/logs.php">Logs</a></li>
           <li><a href="/admin/change-password.php">Password</a></li>
           <li><a href="/admin/?logout=1">Log out</a></li>

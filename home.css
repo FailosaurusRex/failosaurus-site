@@ -227,3 +227,19 @@ html { scroll-behavior: smooth; }
   .home .nav-links a { font-size: 0.66rem; letter-spacing: 0.06em; }
   .home .nav { gap: 12px; }
 }
+
+
+/* LIBRARY TEASER */
+.lib-teaser { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 36px; }
+.lib-tease {
+  display: flex; flex-direction: column; gap: 8px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px;
+  padding: 26px 24px; transition: border-color 0.2s, transform 0.2s;
+}
+.lib-tease:hover { border-color: var(--accent); transform: translateY(-2px); }
+.lib-tease-kicker { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+.lib-tease-title { font-family: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif; font-size: 1.7rem; letter-spacing: 0.04em; line-height: 1.05; }
+.lib-tease-text { font-size: 0.92rem; color: var(--muted-ac); line-height: 1.6; }
+.lib-tease-go { margin-top: auto; padding-top: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg); }
+.lib-tease:hover .lib-tease-go { color: var(--accent); }
+@media (max-width: 768px) { .lib-teaser { grid-template-columns: 1fr; } }

@@ -147,6 +147,7 @@ HTML;
           <li><a href="/#about">About</a></li>
           <li><a href="/#channels">Channels</a></li>
           <li><a href="/#newsletter">Newsletter</a></li>
+          <li><a href="/library.php">Library</a></li>
           <li><a href="/archive.php">Archive</a></li>
         </ul>
       </nav>
@@ -191,6 +192,7 @@ HTML;
           <p class="footer-tag">For everyone who was never immediately great at anything.</p>
         </div>
         <ul class="footer-links">
+          <li><a href="/library.php">Library</a></li>
           <li><a href="/archive.php">Archive</a></li>
           <li><a href="/privacy.html">Privacy</a></li>
           <li><a href="/terms.html">Terms</a></li>

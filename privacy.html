@@ -27,6 +27,7 @@
           <li><a href="/#about">About</a></li>
           <li><a href="/#channels">Channels</a></li>
           <li><a href="/#newsletter">Newsletter</a></li>
+          <li><a href="/library.php">Library</a></li>
           <li><a href="/archive.php">Archive</a></li>
         </ul>
       </nav>
@@ -35,90 +36,329 @@
 
   <main id="main">
     <section class="section" style="border-bottom:none;">
-      <div class="inner">
-        <div class="prose">
+      <div class="inner inner--legal">
+
+        <header class="legal-head">
           <p class="section-label">Legal</p>
           <h1 class="section-heading">Privacy Policy</h1>
-          <p class="meta">Effective date: <time datetime="2026-10-07">October 7, 2026</time></p>
+          <p class="legal-lede">This site is run by one person, and the list of people who read it is, in a very real sense, a list of people who trusted me with an inbox. This page explains exactly what I collect, why, who else touches it, and how to get it deleted. I've tried to write it the way I'd want to read it.</p>
+          <p class="legal-meta">Effective date: <time datetime="2026-10-07">October 7, 2026</time> &middot; Last updated: <time datetime="2026-10-07">October 7, 2026</time></p>
 
-          <nav class="toc" aria-label="Table of contents">
-            <p class="toc-title">On this page</p>
-            <ol>
-              <li><a href="#what-we-collect">What we collect</a></li>
-              <li><a href="#how-we-use-it">How we use it</a></li>
-              <li><a href="#how-we-store-it">How we store it</a></li>
-              <li><a href="#unsubscribing">Unsubscribing</a></li>
-              <li><a href="#your-rights-gdpr-and-others">Your rights (GDPR &amp; others)</a></li>
-              <li><a href="#data-retention">Data retention</a></li>
-              <li><a href="#cookies">Cookies</a></li>
-              <li><a href="#children">Children</a></li>
-              <li><a href="#changes-to-this-policy">Changes to this policy</a></li>
-              <li><a href="#contact">Contact</a></li>
+          <div class="card legal-summary">
+            <p class="eyebrow">Short version</p>
+            <ul>
+              <li><strong>I collect your email address</strong> when you sign up for the newsletter, plus a few technical details needed to run the list (when you signed up, and two random tokens for confirming and unsubscribing).</li>
+              <li><strong>I never sell, rent or share your data</strong> for marketing, and I don't use it to train AI.</li>
+              <li><strong>No analytics, no ad trackers, no tracking cookies.</strong> Visitors don't get cookies from this site at all.</li>
+              <li><strong>Two outside services see some data:</strong> my hosting and email provider (Hostinger) handles the database and the email delivery, and Google Fonts sees your IP address when a page loads, because the fonts are loaded from Google.</li>
+              <li><strong>Sign-up uses double opt-in</strong> and every newsletter has a one-click unsubscribe that deletes your address right away.</li>
+              <li><strong>You can ask for access, correction or deletion</strong> any time at <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>. I'll answer within 30 days.</li>
+            </ul>
+            <p class="legal-summary-note">The short version is a summary, not a substitute. The full policy below is what applies.</p>
+          </div>
+        </header>
+
+        <div class="legal-layout">
+          <aside class="legal-rail">
+            <nav class="toc" aria-label="Table of contents">
+              <p class="toc-title">On this page</p>
+              <ol>
+                <li><a href="#who-is-responsible">Who is responsible</a></li>
+                <li><a href="#what-we-collect">What we collect</a></li>
+                <li><a href="#how-we-use-it">How we use it</a></li>
+                <li><a href="#legal-bases">Legal bases (GDPR)</a></li>
+                <li><a href="#email-practices">Email practices</a></li>
+                <li><a href="#cookies">Cookies &amp; local storage</a></li>
+                <li><a href="#third-parties">Third parties &amp; processors</a></li>
+                <li><a href="#data-retention">Data retention</a></li>
+                <li><a href="#data-security">Data security</a></li>
+                <li><a href="#your-rights">Your rights</a></li>
+                <li><a href="#international-transfers">International transfers</a></li>
+                <li><a href="#children">Children</a></li>
+                <li><a href="#ai-and-scraping">AI training &amp; scraping</a></li>
+                <li><a href="#what-we-never-do">What we never do</a></li>
+                <li><a href="#changes-to-this-policy">Changes to this policy</a></li>
+                <li><a href="#contact">Contact</a></li>
+              </ol>
+            </nav>
+          </aside>
+
+          <div class="prose legal-body">
+
+            <h2 id="who-is-responsible">Who is responsible<a class="anchor" href="#who-is-responsible" aria-label="Link to this section"></a></h2>
+            <p>Failosaurus Rex ("we", "us", "our") is a personal brand and newsletter run by one individual based in Texas, United States, at <strong>failosaurusrex.com</strong>. That individual is the "controller" of your personal data in the sense used by laws like the GDPR: I decide what is collected and why.</p>
+            <p>There is no company, no data team and no ad network behind this site. If you have a privacy question, the person who answers is the person who runs the database. Contact details are in the <a href="#contact">Contact</a> section.</p>
+            <p>This policy covers failosaurusrex.com, the newsletter and the emails we send, the public issue archive and RSS feed, and any email you send to <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+
+            <h2 id="what-we-collect">What we collect<a class="anchor" href="#what-we-collect" aria-label="Link to this section"></a></h2>
+            <p>The table below lists everything we collect or hold, why, for how long, and where it lives. If something isn't in this table, we aren't collecting it.</p>
+
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Data we collect (scrolls sideways on small screens)">
+              <table class="data">
+                <thead>
+                  <tr><th scope="col">Data</th><th scope="col">Why</th><th scope="col">How long</th><th scope="col">Where</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Email address</th>
+                    <td>To confirm your sign-up and send you the newsletter.</td>
+                    <td>Until you unsubscribe or ask us to delete it. Unsubscribing deletes the record immediately.</td>
+                    <td>MySQL database at our hosting provider (Hostinger).</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Sign-up timestamp and confirmed status</th>
+                    <td>To know when you joined and whether you completed double opt-in. Only confirmed addresses receive newsletters.</td>
+                    <td>Same record as your email address; deleted with it.</td>
+                    <td>Same database.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Confirmation token</th>
+                    <td>A random 64-character code in your confirmation link, so only the owner of the inbox can confirm.</td>
+                    <td>Cleared as soon as you confirm. Otherwise it stays with the unconfirmed record.</td>
+                    <td>Same database.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Unsubscribe token</th>
+                    <td>A random 64-character code in your unsubscribe link, so the link works without a login.</td>
+                    <td>Deleted with your record.</td>
+                    <td>Same database, and inside the links in emails sent to you.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">IP address (sign-up attempts only)</th>
+                    <td>Rate limiting: no more than 5 sign-up attempts per IP address per hour, to stop abuse and mail-bombing of other people's inboxes.</td>
+                    <td>Rows older than one hour are deleted automatically, but the cleanup runs when the next sign-up attempt arrives. In a quiet period a row can therefore sit a little longer than an hour.</td>
+                    <td>A separate table in the same database. It is not linked to your email address.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Broadcast log</th>
+                    <td>A record of each newsletter send (date and time, subject line, how many were sent or failed) so I can see whether a send worked. If a delivery to an address fails, the log also records that address and the error message.</td>
+                    <td>No automatic deletion today. Entries that name your address will be removed if you ask.</td>
+                    <td>A log file on the server, outside the public web folder. Only the operator can view it, through the password-protected admin area.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Web server logs</th>
+                    <td>Standard hosting logs (typically IP address, time, requested page, browser type) used by the host to run and secure the service.</td>
+                    <td>Set by Hostinger under its own policies, not by us.</td>
+                    <td>Hostinger's servers. We don't use these logs to track or profile visitors.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Messages you send us</th>
+                    <td>To read and reply to you.</td>
+                    <td>As long as needed to deal with your message, then deleted on request or when no longer useful.</td>
+                    <td>The mailbox for hello@failosaurusrex.com at our email provider.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Your IP address, sent to Google Fonts</th>
+                    <td>Your browser fetches our fonts from Google when a page loads. See <a href="#third-parties">third parties</a>.</td>
+                    <td>Controlled by Google, not us.</td>
+                    <td>Google's servers.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>We do <strong>not</strong> collect your name, location, device identifiers, browsing history or behaviour on the site, and we don't track whether you open our emails or click links in them. The sign-up form asks for one thing: your email address.</p>
+            <p>Newsletter issues are also published in a public archive and RSS feed. Those pages contain the issue content only, never subscriber data.</p>
+
+            <h2 id="how-we-use-it">How we use it<a class="anchor" href="#how-we-use-it" aria-label="Link to this section"></a></h2>
+            <ul>
+              <li>To send the one-time confirmation email when you sign up, and a short welcome note once you confirm.</li>
+              <li>To send you the Failosaurus Rex newsletter, and occasionally a service message such as a change to these policies.</li>
+              <li>To honour unsubscribe, access, correction and deletion requests.</li>
+              <li>To limit sign-up abuse (the IP-based rate limit) and keep the site and admin area secure.</li>
+              <li>To check that newsletter sends went out, using the broadcast log.</li>
+              <li>To answer you when you write to us.</li>
+            </ul>
+            <p>That's the full list. We don't use your email address for advertising, profiling, or anything you wouldn't expect from a newsletter.</p>
+
+            <h2 id="legal-bases">Legal bases (GDPR)<a class="anchor" href="#legal-bases" aria-label="Link to this section"></a></h2>
+            <p>If you are in the European Economic Area or the United Kingdom, the law requires us to say which legal ground we rely on for each use of your data.</p>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Legal bases (scrolls sideways on small screens)">
+              <table class="data">
+                <thead>
+                  <tr><th scope="col">What</th><th scope="col">Legal basis</th><th scope="col">In plain words</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Sending the newsletter</th>
+                    <td>Consent (Art. 6(1)(a))</td>
+                    <td>You asked for it and confirmed by clicking the link. You can withdraw at any time, and doing so is as easy as signing up.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Rate limiting, security, broadcast log</th>
+                    <td>Legitimate interests (Art. 6(1)(f))</td>
+                    <td>Keeping the sign-up form from being abused and the system working properly is in everyone's interest. The data involved is minimal and short-lived.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Loading fonts from Google</th>
+                    <td>Legitimate interests (Art. 6(1)(f))</td>
+                    <td>Consistent typography. If you'd rather not, you can object (see <a href="#your-rights">Your rights</a>) or block requests to Google Fonts in your browser. The site falls back to your system fonts and still works.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Replying to your messages</th>
+                    <td>Legitimate interests, or steps you asked us to take</td>
+                    <td>You wrote to us; we write back.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Handling rights requests, responding to lawful demands</th>
+                    <td>Legal obligation (Art. 6(1)(c))</td>
+                    <td>Sometimes the law tells us what we have to do with data.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Where we rely on legitimate interests, we have weighed them against your rights and expectations. You can ask us for details.</p>
+
+            <h2 id="email-practices">Email practices<a class="anchor" href="#email-practices" aria-label="Link to this section"></a></h2>
+            <h3>Double opt-in</h3>
+            <p>When you submit your address, we send one email containing a confirmation link. You are not added to the newsletter until you click it, so nobody can sign you up without access to your inbox. If you never confirm, you receive no newsletters. If the same address is submitted again before it has been confirmed, we generate a fresh link and send another confirmation email, and the older link stops working.</p>
+            <p>After you confirm, we send a short welcome note. After that, you'll only hear from us when there's a newsletter issue or an occasional service message.</p>
+            <h3>How often</h3>
+            <p>Roughly weekly. That's an intention, not a promise, so there may be gaps or the occasional extra note.</p>
+            <h3>Unsubscribing</h3>
+            <ul>
+              <li>Every newsletter and the welcome email contain an unsubscribe link. Clicking it removes you straight away, with no login and no questions. Newsletters also carry a standard <code>List-Unsubscribe</code> one-click header, so Gmail, Apple Mail and others can show their own "Unsubscribe" button.</li>
+              <li>Or email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> and we will remove you within 48 hours.</li>
+              <li>Unsubscribing permanently deletes your email address and tokens from the subscriber database. We don't keep a "do not contact" copy, which means that if you sign up again later, you start fresh with a new confirmation email.</li>
+            </ul>
+            <div class="plain" role="note">
+              <p class="plain-label">Plain English</p>
+              <p>Confirm to join, click once to leave, and when you leave your address is deleted rather than flagged.</p>
+            </div>
+            <p>We send email through our hosting provider's mail servers over an encrypted (STARTTLS) connection. We do not embed tracking pixels or link-tracking in our emails.</p>
+
+            <h2 id="cookies">Cookies &amp; local storage<a class="anchor" href="#cookies" aria-label="Link to this section"></a></h2>
+            <p>This site does not set cookies for visitors, and its public pages do not use <code>localStorage</code>, <code>sessionStorage</code> or similar browser storage. We don't use analytics, advertising or social-media tracking scripts.</p>
+            <p>There is one exception. The private admin area, which only the operator can use, sets a single session cookie (named <code>frx_admin</code>) so the operator stays logged in. It is strictly functional, holds no tracking information, and exists only if someone opens the admin login page. Normal visitors who never visit that page never receive it. Because it is essential to running a login, it needs no consent banner, and that is why this site doesn't have one.</p>
+            <p>Third-party requests (Google Fonts) are covered in the next section. Our site doesn't set cookies through them, though Google's own handling of requests is governed by Google's policies.</p>
+
+            <h2 id="third-parties">Third parties &amp; processors<a class="anchor" href="#third-parties" aria-label="Link to this section"></a></h2>
+            <p>We don't sell or share your data with advertisers or data brokers. A small number of outside services are involved in making the site and newsletter work:</p>
+            <div class="table-wrap" tabindex="0" role="region" aria-label="Third parties (scrolls sideways on small screens)">
+              <table class="data">
+                <thead>
+                  <tr><th scope="col">Who</th><th scope="col">What they do</th><th scope="col">What they can see</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Hostinger (hosting, database, email)</th>
+                    <td>Hosts the website files and the MySQL database, and operates the mail server (SMTP) through which confirmation emails and newsletters are sent. Acts as our processor.</td>
+                    <td>Everything stored in the database, the content and recipient of every email sent through it, and standard web server logs.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Google Fonts (Google)</th>
+                    <td>Serves the typefaces used on every page (Bebas Neue and DM Sans) from fonts.googleapis.com and fonts.gstatic.com.</td>
+                    <td>Your IP address, browser and device information, and the page being loaded, because your browser contacts Google directly to fetch the fonts. This happens on most pages of the site, including this one. This is an honest trade-off: we haven't self-hosted the fonts. See <a href="https://policies.google.com/privacy" rel="noopener">Google's privacy policy</a>.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Your own email provider</th>
+                    <td>Receives our emails to you (Gmail, Outlook, iCloud and so on).</td>
+                    <td>The emails themselves, under your agreement with them.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>If the site is served through any additional network or proxy service at a given time, that service would also see ordinary request data such as your IP address. We don't use any such service for analytics or advertising.</p>
+            <p>We may disclose information if required by law, or to protect against fraud, abuse or a legal claim. If that ever involves your subscriber data, we'll tell you where the law allows it.</p>
+            <p>Links to other websites in our emails or on the site lead to places with their own privacy practices. See the <a href="/terms.html#third-party-links">Terms</a>.</p>
+
+            <h2 id="data-retention">Data retention<a class="anchor" href="#data-retention" aria-label="Link to this section"></a></h2>
+            <ul>
+              <li><strong>Subscriber record</strong> (email, timestamp, tokens, confirmed status): kept while you're subscribed. Deleted immediately when you unsubscribe via the link, and within 48 hours if you ask by email.</li>
+              <li><strong>Unconfirmed sign-ups:</strong> these are not currently deleted automatically. We keep them only so the confirmation link can still work, and we'll remove any such address when you ask.</li>
+              <li><strong>Sign-up attempt IPs:</strong> purged once older than one hour, as described above.</li>
+              <li><strong>Broadcast log:</strong> kept until the operator deletes it. It contains no content of your emails, and your address appears in it only if a delivery to you failed.</li>
+              <li><strong>Emails you send us:</strong> kept as long as useful for the conversation; deleted on request.</li>
+              <li><strong>Backups:</strong> our hosting provider may keep routine backups for a limited time. Deleted data can persist in those until they are overwritten, and we won't restore deleted subscribers from them.</li>
+              <li><strong>Hosting logs and Google Fonts requests:</strong> kept according to those providers' own policies.</li>
+            </ul>
+            <p>The public archive and RSS feed contain published newsletter issues and are kept indefinitely, since they are the publication itself.</p>
+
+            <h2 id="data-security">Data security<a class="anchor" href="#data-security" aria-label="Link to this section"></a></h2>
+            <p>I take reasonable, proportionate steps to protect what I hold:</p>
+            <ul>
+              <li>Database credentials and email passwords are stored in a configuration file kept outside the public web folder, not in the site's code.</li>
+              <li>The broadcast log also lives outside the public web folder.</li>
+              <li>The admin area requires a password (stored hashed, not in plain text), and the admin pages are excluded from search engines via robots.txt.</li>
+              <li>Confirmation and unsubscribe links use long random tokens that can't be guessed.</li>
+              <li>Database queries are parameterised, and email travels between this site and our provider's mail server over an encrypted connection.</li>
+              <li>The sign-up form is rate-limited, and the form never reveals whether an address is already on the list.</li>
+            </ul>
+            <p>No system is perfectly secure, and I can't promise that nothing will ever go wrong. If a breach affecting your personal data occurs, I'll tell you and any required authorities as the law requires, and as quickly as I reasonably can.</p>
+
+            <h2 id="your-rights">Your rights<a class="anchor" href="#your-rights" aria-label="Link to this section"></a></h2>
+            <p>I apply the rights below to everyone, wherever you live, even where a particular law's thresholds might not strictly cover a one-person newsletter.</p>
+
+            <h3>Everyone</h3>
+            <ul>
+              <li><strong>Access:</strong> ask what we hold about you and get a copy.</li>
+              <li><strong>Correction:</strong> have inaccurate data fixed.</li>
+              <li><strong>Deletion:</strong> have your data erased.</li>
+              <li><strong>Portability:</strong> get your data in a common, machine-readable format (for example CSV).</li>
+              <li><strong>Objection and restriction:</strong> object to or ask us to pause processing based on our legitimate interests.</li>
+              <li><strong>Withdraw consent:</strong> at any time. Unsubscribing does exactly this. Withdrawal doesn't affect anything done before it.</li>
+            </ul>
+
+            <h3>EEA and UK residents (GDPR / UK GDPR)</h3>
+            <p>You have all of the rights above under Articles 15 to 21, plus the right to complain to your local data protection authority. In the UK that's the Information Commissioner's Office (ICO). I'd appreciate the chance to fix things first, but you're never required to come to me before complaining.</p>
+
+            <h3>California residents (CCPA / CPRA)</h3>
+            <p>You may ask to know what personal information we have collected, used and disclosed; to delete it; to correct it; and to opt out of the "sale" or "sharing" of personal information. We <strong>do not sell or share</strong> personal information, as those terms are defined in California law, so there is nothing to opt out of. We won't discriminate against you for exercising a privacy right.</p>
+
+            <h3>Texas residents (TDPSA)</h3>
+            <p>You may confirm whether we process your personal data and access it, correct it, delete it, obtain a portable copy, and opt out of the sale of personal data, targeted advertising and profiling. We do none of those three, and we collect no sensitive personal data. If we decline a request and you disagree, you can appeal by replying to our decision, or by emailing us with "Appeal" in the subject line. We'll respond to the appeal in writing within 60 days. If you're still not satisfied, you can contact the Texas Attorney General.</p>
+
+            <h3>How to exercise your rights</h3>
+            <ol class="legal-steps">
+              <li>Email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> from the address you subscribed with and say what you'd like (access, correction, deletion, etc.).</li>
+              <li>If the request comes from a different address, we may ask you to confirm you control the subscribed one, for example by replying from it or clicking a link we send there. We do this to make sure we don't give your data to someone else.</li>
+              <li>We'll reply within <strong>30 days</strong>. If a request is unusually complex and we need more time, we'll tell you why and by when, within any limit the law allows.</li>
+              <li>There's no charge, unless a request is clearly baseless or excessive, in which case we'll explain before doing anything.</li>
             </ol>
-          </nav>
+            <p>You can also authorise someone else to make a request for you. We'll need proof of that authorisation. And if we can't fulfil a request, in whole or in part, we'll tell you why.</p>
+            <div class="plain" role="note">
+              <p class="plain-label">Plain English</p>
+              <p>Want out, a copy, or a fix? Email us. If you only want to stop the emails, the unsubscribe link is the fastest route and deletes your address instantly.</p>
+            </div>
+            <p>We don't track you, so there is no tracking for a "Do Not Track" or Global Privacy Control signal to switch off. We treat such signals as a reasonable request to keep doing that.</p>
 
-          <p>
-        This policy describes how Failosaurus Rex ("we", "us", "our"), operating at
-        <strong>failosaurusrex.com</strong>, collects, uses, and protects your personal
-        information. We keep it simple because we don't do anything weird with your data.
-      </p>
+            <h2 id="international-transfers">International transfers<a class="anchor" href="#international-transfers" aria-label="Link to this section"></a></h2>
+            <p>I operate from the United States. Our hosting and email provider runs data centres in several regions, and Google operates globally, so your data may be stored or processed in countries other than your own, including the United States, whose data protection laws may differ from those where you live.</p>
+            <p>Where you are in the EEA, UK or Switzerland, transfers happen on the basis of your consent when you sign up, and with providers that publish their own transfer safeguards. If you aren't comfortable with that, please don't subscribe, or ask us to delete your data. We're happy to give you more detail on request.</p>
 
-      <h2 id="what-we-collect">What we collect</h2>
-      <p>The only personal information we collect is your <strong>email address</strong>,
-      and only when you voluntarily sign up for the newsletter.</p>
-      <p>We do not use third-party analytics, tracking pixels, or advertising cookies.
-      We do not collect IP addresses, device identifiers, or browsing behavior.</p>
+            <h2 id="children">Children<a class="anchor" href="#children" aria-label="Link to this section"></a></h2>
+            <p>This site and newsletter are not directed at children. We don't knowingly collect personal information from anyone under 13 (or under 16 where your local law sets the age of digital consent higher). If you think a child has signed up, email us and we'll delete the address promptly.</p>
 
-      <h2 id="how-we-use-it">How we use it</h2>
-      <ul>
-        <li>To send you the Failosaurus Rex newsletter (tech, culture, and whatever we're currently failing at).</li>
-        <li>To send you a one-time confirmation email when you sign up.</li>
-        <li>To process unsubscribe requests tied to your unique token.</li>
-      </ul>
-      <p>We will never sell, rent, trade, or share your email address with any third party
-      for marketing purposes.</p>
+            <h2 id="ai-and-scraping">AI training &amp; scraping<a class="anchor" href="#ai-and-scraping" aria-label="Link to this section"></a></h2>
+            <p>Two separate things here:</p>
+            <ul>
+              <li><strong>Your personal data:</strong> we don't use subscriber data to train AI or machine-learning models, and we don't give it to anyone who does.</li>
+              <li><strong>Our published content:</strong> it's copyrighted, and use of it for AI training, dataset-building or automated scraping on behalf of AI companies is prohibited without a separate written license. Our <a href="/robots.txt">robots.txt</a> asks known AI crawlers to stay away, but it is a signal, not the limit of the rule. The binding terms are in the <a href="/terms.html#prohibition-on-ai-training-use">Terms of Service</a>.</li>
+            </ul>
 
-      <h2 id="how-we-store-it">How we store it</h2>
-      <p>Your email address and a unique unsubscribe token are stored in a MySQL database
-      hosted on Hostinger's servers in the European Union. Access is restricted to this
-      site's application and its operator.</p>
+            <h2 id="what-we-never-do">What we never do<a class="anchor" href="#what-we-never-do" aria-label="Link to this section"></a></h2>
+            <ul class="legal-never">
+              <li>Sell, rent or trade your email address or any other personal data.</li>
+              <li>Share your data with advertisers, data brokers or other newsletters.</li>
+              <li>Add you to the list without your confirmation.</li>
+              <li>Use analytics, tracking pixels, advertising cookies or fingerprinting on this site.</li>
+              <li>Track whether you open our emails or which links you click.</li>
+              <li>Use your data to train AI models.</li>
+              <li>Make it hard to leave. One click, and you're gone.</li>
+              <li>Quietly change this policy in ways that matter without updating the date on this page.</li>
+            </ul>
 
-      <h2 id="unsubscribing">Unsubscribing</h2>
-      <p>Every email we send includes a one-click unsubscribe link. You can also email
-      <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> and we will
-      remove you within 48 hours. Unsubscribing permanently deletes your email address
-      from our database.</p>
+            <h2 id="changes-to-this-policy">Changes to this policy<a class="anchor" href="#changes-to-this-policy" aria-label="Link to this section"></a></h2>
+            <p>If I change this policy, I'll update the "Last updated" date at the top of the page. If the changes are material, for example a new kind of data or a new third party, I'll also tell subscribers by email before they take effect where practical. Where the law requires fresh consent, I'll ask for it rather than assume it. If you don't like a change, you can unsubscribe at any time.</p>
 
-      <h2 id="your-rights-gdpr-and-others">Your rights (GDPR &amp; others)</h2>
-      <p>Depending on where you live, you may have the right to:</p>
-      <ul>
-        <li>Access the data we hold about you.</li>
-        <li>Correct inaccurate data.</li>
-        <li>Request deletion of your data.</li>
-        <li>Object to or restrict processing.</li>
-        <li>Withdraw consent at any time (unsubscribing is consent withdrawal).</li>
-      </ul>
-      <p>To exercise any of these rights, email
-      <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+            <h2 id="contact">Contact<a class="anchor" href="#contact" aria-label="Link to this section"></a></h2>
+            <p>For any privacy question, request or complaint, email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>. A real person reads it.</p>
+            <p>Related: <a href="/terms.html">Terms of Service</a>.</p>
 
-      <h2 id="data-retention">Data retention</h2>
-      <p>We retain your email address for as long as you are subscribed to the newsletter.
-      Unsubscribing deletes your record immediately.</p>
-
-      <h2 id="cookies">Cookies</h2>
-      <p>This site does not use cookies.</p>
-
-      <h2 id="children">Children</h2>
-      <p>This site is not directed at children under 13. We do not knowingly collect
-      information from anyone under 13.</p>
-
-      <h2 id="changes-to-this-policy">Changes to this policy</h2>
-      <p>If we make material changes, we will update the effective date at the top of this
-      page. Continued use of the newsletter after that date constitutes acceptance.</p>
-
-      <h2 id="contact">Contact</h2>
-      <p>Questions? Email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+            <p class="legal-end text-muted">Last updated <time datetime="2026-10-07">October 7, 2026</time>.</p>
+          </div>
         </div>
+
       </div>
     </section>
   </main>
@@ -131,6 +371,7 @@
           <p class="footer-tag">For everyone who was never immediately great at anything.</p>
         </div>
         <ul class="footer-links">
+          <li><a href="/library.php">Library</a></li>
           <li><a href="/archive.php">Archive</a></li>
           <li><a href="/privacy.html" aria-current="page">Privacy</a></li>
           <li><a href="/terms.html">Terms</a></li>
