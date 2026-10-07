@@ -84,7 +84,10 @@ a {
   font-size: 1.2rem;
   letter-spacing: 0.14em;
   color: var(--accent);
+  transition: opacity 0.15s;
 }
+
+.nav-logo:hover { opacity: 0.75; }
 
 .nav-links {
   list-style: none;
@@ -107,7 +110,7 @@ a {
 /* 6. HERO SECTION */
 
 .hero {
-  padding-block: 88px 80px;
+  padding-block: 104px 96px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -141,11 +144,13 @@ a {
   font-size: 0.82rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 12px 24px;
-  transition: opacity 0.15s;
+  padding: 13px 28px;
+  border-radius: 3px;
+  transition: opacity 0.15s, transform 0.15s;
 }
 
-.btn:hover { opacity: 0.82; }
+.btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); opacity: 1; }
 
 
 /* 8. GENERIC SECTION */
@@ -178,7 +183,7 @@ a {
   font-size: 1.05rem;
   color: var(--fg-muted);
   max-width: 560px;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 
@@ -194,13 +199,24 @@ a {
 .channel-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  padding: 24px 20px;
+  padding: 28px 24px;
+  border-radius: 4px;
   transition: border-color 0.2s, transform 0.2s;
 }
 
 .channel-card:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+}
+
+.channel-card--soon {
+  opacity: 0.7;
+}
+
+.channel-card--soon:hover {
+  border-color: var(--border);
+  transform: none;
+  cursor: default;
 }
 
 .channel-platform {
@@ -230,12 +246,17 @@ a {
 .channel-link:hover { color: var(--accent); }
 
 .channel-soon {
-  font-size: 0.7rem;
+  display: inline-block;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--border);
+  color: var(--fg-muted);
+  opacity: 0.6;
   cursor: default;
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 2px;
 }
 
 
@@ -260,13 +281,18 @@ a {
   color: var(--fg);
   font-family: 'DM Sans', sans-serif;
   font-size: 0.95rem;
-  padding: 12px 16px;
+  padding: 13px 16px;
+  border-radius: 3px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.email-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.08);
 }
 
 .email-input::placeholder { color: var(--fg-muted); }
-.email-input:focus        { border-color: var(--accent); }
 
 .form-note {
   margin-top: 12px;
@@ -281,6 +307,7 @@ a {
   padding-block: 32px;
   color: var(--fg-muted);
   font-size: 0.85rem;
+  border-top: 1px solid var(--border);
 }
 
 .site-footer a {
@@ -291,12 +318,21 @@ a {
 .site-footer a:hover { color: var(--accent); }
 
 
-/* 12. RESPONSIVE — phones (~480px and below) */
+/* 12. RESPONSIVE */
+
+@media (max-width: 768px) {
+  .hero           { padding-block: 80px 72px; }
+  .section        { padding-block: 60px; }
+  .channel-grid   { grid-template-columns: 1fr; gap: 12px; }
+  .inner          { padding-inline: 20px; }
+}
 
 @media (max-width: 480px) {
-  .nav-links      { gap: 16px; }
+  .nav-links      { gap: 14px; }
+  .nav-links a    { font-size: 0.72rem; }
   .hero           { padding-block: 60px 52px; }
-  .section        { padding-block: 52px; }
+  .section        { padding-block: 48px; }
   .signup-form    { flex-direction: column; }
   .btn            { text-align: center; }
+  .inner          { padding-inline: 16px; }
 }
