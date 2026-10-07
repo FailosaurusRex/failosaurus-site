@@ -54,6 +54,33 @@ try {
         created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS signup_attempts (
+        id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        ip         VARCHAR(45)  NOT NULL,
+        attempted_at DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_ip_time (ip, attempted_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Rate limit: max 5 attempts per IP per hour
+    $ip = $_SERVER['HTTP_CF_CONNECTING_IP']   // Cloudflare
+       ?? $_SERVER['HTTP_X_FORWARDED_FOR']
+       ?? $_SERVER['REMOTE_ADDR']
+       ?? '0.0.0.0';
+    $ip = trim(explode(',', $ip)[0]); // take first IP if comma-separated
+
+    // Purge attempts older than 1 hour to keep table small
+    $pdo->prepare("DELETE FROM signup_attempts WHERE attempted_at < NOW() - INTERVAL 1 HOUR")->execute();
+
+    $count_stmt = $pdo->prepare("SELECT COUNT(*) FROM signup_attempts WHERE ip = :ip AND attempted_at > NOW() - INTERVAL 1 HOUR");
+    $count_stmt->execute([':ip' => $ip]);
+    if ((int) $count_stmt->fetchColumn() >= 5) {
+        http_response_code(429);
+        echo json_encode(['error' => 'Too many attempts. Please try again later.']);
+        exit;
+    }
+
+    $pdo->prepare("INSERT INTO signup_attempts (ip) VALUES (:ip)")->execute([':ip' => $ip]);
+
     $token = bin2hex(random_bytes(32));
     $stmt  = $pdo->prepare(
         "INSERT IGNORE INTO subscribers (email, token) VALUES (:email, :token)"

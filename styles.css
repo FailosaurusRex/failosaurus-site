@@ -229,6 +229,15 @@ a {
 
 .channel-link:hover { color: var(--accent); }
 
+.channel-soon {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--border);
+  cursor: default;
+}
+
 
 /* 10. NEWSLETTER SECTION */
 
