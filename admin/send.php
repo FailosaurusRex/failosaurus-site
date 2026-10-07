@@ -229,31 +229,105 @@ file_put_contents($log_dir . '/broadcast.log', $log_line, FILE_APPEND | LOCK_EX)
 function build_email_html(string $preheader, string $body, string $unsub_url): string {
     $unsub_esc = htmlspecialchars($unsub_url, ENT_QUOTES, 'UTF-8');
     return <<<HTML
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="supported-color-schemes" content="dark light" />
+  <title>Failosaurus Rex</title>
 </head>
-<body style="margin:0;padding:0;background:#110c08;font-family:Arial,sans-serif;color:#ede5d8;">
+<body style="margin:0;padding:0;background-color:#110c08;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 {$preheader}
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#110c08;padding:48px 0;">
-  <tr><td align="center">
-    <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;padding:0 24px;">
-      <tr><td>
-        <p style="font-size:1rem;font-weight:700;letter-spacing:0.14em;color:#39ff14;margin:0 0 32px;">FRX</p>
-        <div style="color:#ede5d8;font-size:1rem;line-height:1.75;">{$body}</div>
-        <hr style="border:none;border-top:1px solid #2c1f16;margin:40px 0 24px;">
-        <p style="font-size:0.75rem;color:#3a342e;margin:0;line-height:1.6;">
-          You're receiving this because you signed up at
-          <a href="https://failosaurusrex.com" style="color:#3a342e;">failosaurusrex.com</a>.<br>
-          <a href="{$unsub_esc}" style="color:#3a342e;">Unsubscribe</a>
-        </p>
-      </td></tr>
-    </table>
-  </td></tr>
+<!-- ═══════════════════════════════════════════════════════════════
+     OUTER WRAPPER — full-bleed dark background
+     ═══════════════════════════════════════════════════════════════ -->
+<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#110c08" style="background-color:#110c08;margin:0;padding:0;">
+  <tr>
+    <td align="center" valign="top" style="padding:36px 16px 56px 16px;">
+
+      <!-- ─── CONTAINER: max 600px ──────────────────────────────── -->
+      <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+        <!-- ╔══════════════════╗
+             ║  TOP ACCENT BAR  ║  4 px neon green
+             ╚══════════════════╝ -->
+        <tr>
+          <td bgcolor="#39ff14" height="4" style="background-color:#39ff14;font-size:0;line-height:0;mso-line-height-rule:exactly;" aria-hidden="true">&nbsp;</td>
+        </tr>
+
+        <!-- ╔══════════════════╗
+             ║     HEADER       ║
+             ╚══════════════════╝ -->
+        <tr>
+          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:28px 40px 26px 40px;">
+            <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <!-- Wordmark -->
+                  <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:700;letter-spacing:0.22em;color:#39ff14;line-height:1;mso-line-height-rule:exactly;">FRX</p>
+                  <!-- Brand name -->
+                  <p style="margin:7px 0 0 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:400;letter-spacing:0.18em;color:#7a6e64;line-height:1;text-transform:uppercase;mso-line-height-rule:exactly;">Failosaurus Rex</p>
+                  <!-- Tagline -->
+                  <p style="margin:11px 0 0 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:400;font-style:italic;letter-spacing:0.01em;color:#3a342e;line-height:1.4;mso-line-height-rule:exactly;">For everyone who was never immediately great at anything.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- 1 px separator: header → content -->
+        <tr>
+          <td bgcolor="#2c1f16" height="1" style="background-color:#2c1f16;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>
+        </tr>
+
+        <!-- ╔══════════════════╗
+             ║  CONTENT AREA    ║
+             ╚══════════════════╝ -->
+        <tr>
+          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:40px 40px 44px 40px;">
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.75;color:#ede5d8;max-width:100%;">
+              {$body}
+            </div>
+          </td>
+        </tr>
+
+        <!-- ╔══════════════════╗
+             ║    DIVIDER       ║
+             ╚══════════════════╝ -->
+        <tr>
+          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:0 40px;">
+            <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td bgcolor="#2c1f16" height="1" style="background-color:#2c1f16;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- ╔══════════════════╗
+             ║     FOOTER       ║
+             ╚══════════════════╝ -->
+        <tr>
+          <td bgcolor="#110c08" style="background-color:#110c08;padding:20px 40px 30px 40px;">
+            <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.65;color:#4a3f37;">
+              You&rsquo;re receiving this because you signed up at
+              <a href="https://failosaurusrex.com" style="color:#4a3f37;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">failosaurusrex.com</a>.
+              &nbsp;&middot;&nbsp;
+              <a href="{$unsub_esc}" style="color:#4a3f37;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">Unsubscribe</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+      <!-- /container -->
+
+    </td>
+  </tr>
 </table>
+<!-- /outer wrapper -->
 </body>
 </html>
 HTML;
