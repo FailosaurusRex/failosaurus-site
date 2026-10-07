@@ -21,6 +21,13 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
+    // Ensure double opt-in columns exist (safe on repeated runs)
+    $pdo->exec("ALTER TABLE subscribers
+        ADD COLUMN IF NOT EXISTS confirm_token CHAR(64) NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS confirmed TINYINT(1) NOT NULL DEFAULT 0");
+    // Treat legacy rows (signed up before double opt-in) as confirmed
+    $pdo->exec("UPDATE subscribers SET confirmed = 1 WHERE confirmed = 0 AND confirm_token = ''");
+
     $total   = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1")->fetchColumn();
     $pending = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 0")->fetchColumn();
 
