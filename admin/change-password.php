@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 $config_path = dirname(__DIR__, 2) . '/frx-db-config.php';
 if (!file_exists($config_path)) { http_response_code(500); die('Server configuration missing.'); }
 require $config_path;

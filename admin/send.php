@@ -1,14 +1,5 @@
 <?php
-/**
- * FRX Newsletter Broadcast — Send Script
- *
- * Called by POST from admin/index.php after password auth.
- * Sends to every subscriber in batches, with a small sleep between
- * messages to stay within Hostinger SMTP rate limits.
- *
- * NEVER call this endpoint directly from outside — the session check
- * at the top will reject any unauthenticated request.
- */
+ob_start(); // buffer output so header() redirects work even if config file has trailing whitespace
 
 $config_path = dirname(__DIR__, 2) . '/frx-db-config.php';
 if (!file_exists($config_path)) {
@@ -59,7 +50,7 @@ try {
     );
     $rows = $pdo->query("SELECT email, token FROM subscribers ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die('Database error: could not load subscribers.');
+    die('Database error: ' . htmlspecialchars($e->getMessage()));
 }
 
 $total   = count($rows);
