@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  clearTimeout(window.__revealFallback);
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

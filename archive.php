@@ -177,13 +177,15 @@ try {
 </head>
 <body>
 
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <?php if ($page_mode === 'issue'): ?>
   <div class="read-progress" id="read-progress" aria-hidden="true"></div>
   <?php endif; ?>
 
   <header class="site-header">
     <div class="inner">
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="/" class="nav-logo"><img class="nav-mark" src="/brand/logo-mark.svg" alt="" width="30" height="30"><span>FRX</span></a>
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
@@ -194,7 +196,7 @@ try {
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="section archive-section">
       <div class="inner archive-wrap">
 
