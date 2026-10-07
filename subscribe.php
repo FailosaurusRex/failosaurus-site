@@ -50,16 +50,21 @@ try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS subscribers (
         id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         email      VARCHAR(255) NOT NULL UNIQUE,
+        token      CHAR(64)     NOT NULL,
         created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-    $stmt = $pdo->prepare("INSERT IGNORE INTO subscribers (email) VALUES (:email)");
-    $stmt->execute([':email' => $email]);
+    $token = bin2hex(random_bytes(32));
+    $stmt  = $pdo->prepare(
+        "INSERT IGNORE INTO subscribers (email, token) VALUES (:email, :token)"
+    );
+    $stmt->execute([':email' => $email, ':token' => $token]);
 
     $is_new = $stmt->rowCount() > 0;
 
     if ($is_new) {
-        send_confirmation($email, $smtp_pass);
+        $unsub_url = 'https://failosaurusrex.com/unsubscribe.php?token=' . $token;
+        send_confirmation($email, $smtp_pass, $unsub_url);
     }
 
     echo json_encode(['ok' => true]);
@@ -69,7 +74,7 @@ try {
     echo json_encode(['error' => 'Database error']);
 }
 
-function send_confirmation(string $to, string $smtp_pass): void {
+function send_confirmation(string $to, string $smtp_pass, string $unsub_url): void {
     $mail = new PHPMailer(true);
 
     $mail->isSMTP();
@@ -105,6 +110,9 @@ function send_confirmation(string $to, string $smtp_pass): void {
             Talk soon,<br>
             <a href="https://failosaurusrex.com" style="color:#39ff14;text-decoration:none;">Failosaurus Rex</a>
           </p>
+          <p style="font-size:0.75rem;color:#3a342e;margin:32px 0 0;">
+            <a href="{$unsub_url}" style="color:#3a342e;">Unsubscribe</a>
+          </p>
         </td></tr>
       </table>
     </td></tr>
@@ -113,7 +121,7 @@ function send_confirmation(string $to, string $smtp_pass): void {
 </html>
 HTML;
 
-    $mail->AltBody = "Hey — you're in.\n\nEvery week: tech, culture, and whatever I'm currently failing at. No spam, no fluff.\n\nTalk soon,\nFailosaurus Rex\nhttps://failosaurusrex.com";
+    $mail->AltBody = "Hey — you're in.\n\nEvery week: tech, culture, and whatever I'm currently failing at. No spam, no fluff.\n\nTalk soon,\nFailosaurus Rex\nhttps://failosaurusrex.com\n\n---\nUnsubscribe: {$unsub_url}";
 
     $mail->send();
 }
