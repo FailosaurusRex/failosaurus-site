@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#110c08" rx="4"/>
-  <text x="16" y="23" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#39ff14" text-anchor="middle" letter-spacing="1">FRX</text>
+  <style>
+    .bg { fill: #110c08; }
+    .fg { fill: #39ff14; }
+    .bar { fill: #39ff14; }
+    @media (prefers-color-scheme: light) { .bg { fill: #ede5d8; } .fg, .bar { fill: #0b6b00; } }
+  </style>
+  <rect class="bg" width="32" height="32" rx="6"/>
+  <text class="fg" x="16" y="21" text-anchor="middle" font-family="Impact,'Arial Narrow Bold','Arial Black',Arial,sans-serif" font-size="19" font-weight="900" textLength="26" lengthAdjust="spacingAndGlyphs">FRX</text>
+  <rect class="bar" x="3" y="25" width="26" height="3" rx="1.5"/>
 </svg>

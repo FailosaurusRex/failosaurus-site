@@ -5,121 +5,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy — Failosaurus Rex</title>
   <meta name="description" content="How Failosaurus Rex collects, uses, and protects your information.">
+  <meta name="theme-color" content="#110c08">
+  <link rel="canonical" href="https://failosaurusrex.com/privacy.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    .legal-body { max-width: 680px; }
-    .legal-body h2 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.06em;
-      color: var(--fg);
-      margin: 2.5rem 0 0.6rem;
-    }
-    .legal-body p, .legal-body ul { color: var(--fg-muted); line-height: 1.75; margin-bottom: 1rem; }
-    .legal-body ul { padding-left: 1.4rem; }
-    .legal-body li { margin-bottom: 0.4rem; }
-    .legal-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
-    .effective { font-size: 0.8rem; color: var(--fg-muted); margin-bottom: 2rem; }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
+  <a href="#main" class="skip-link">Skip to content</a>
+
   <header class="site-header">
     <div class="inner">
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="/" class="nav-logo">FRX</a>
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
           <li><a href="/#channels">Channels</a></li>
           <li><a href="/#newsletter">Newsletter</a></li>
+          <li><a href="/archive.php">Archive</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="section" style="border-bottom:none;">
-      <div class="inner legal-body">
-        <p class="section-label">Legal</p>
-        <h1 class="section-heading">Privacy Policy</h1>
-        <p class="effective">Effective date: October 7, 2026</p>
+      <div class="inner">
+        <div class="prose">
+          <p class="section-label">Legal</p>
+          <h1 class="section-heading">Privacy Policy</h1>
+          <p class="meta">Effective date: <time datetime="2026-10-07">October 7, 2026</time></p>
 
-        <p>
-          This policy describes how Failosaurus Rex ("we", "us", "our"), operating at
-          <strong>failosaurusrex.com</strong>, collects, uses, and protects your personal
-          information. We keep it simple because we don't do anything weird with your data.
-        </p>
+          <nav class="toc" aria-label="Table of contents">
+            <p class="toc-title">On this page</p>
+            <ol>
+              <li><a href="#what-we-collect">What we collect</a></li>
+              <li><a href="#how-we-use-it">How we use it</a></li>
+              <li><a href="#how-we-store-it">How we store it</a></li>
+              <li><a href="#unsubscribing">Unsubscribing</a></li>
+              <li><a href="#your-rights-gdpr-and-others">Your rights (GDPR &amp; others)</a></li>
+              <li><a href="#data-retention">Data retention</a></li>
+              <li><a href="#cookies">Cookies</a></li>
+              <li><a href="#children">Children</a></li>
+              <li><a href="#changes-to-this-policy">Changes to this policy</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ol>
+          </nav>
 
-        <h2>What we collect</h2>
-        <p>The only personal information we collect is your <strong>email address</strong>,
-        and only when you voluntarily sign up for the newsletter.</p>
-        <p>We do not use third-party analytics, tracking pixels, or advertising cookies.
-        We do not collect IP addresses, device identifiers, or browsing behavior.</p>
+          <p>
+        This policy describes how Failosaurus Rex ("we", "us", "our"), operating at
+        <strong>failosaurusrex.com</strong>, collects, uses, and protects your personal
+        information. We keep it simple because we don't do anything weird with your data.
+      </p>
 
-        <h2>How we use it</h2>
-        <ul>
-          <li>To send you the Failosaurus Rex newsletter (tech, culture, and whatever we're currently failing at).</li>
-          <li>To send you a one-time confirmation email when you sign up.</li>
-          <li>To process unsubscribe requests tied to your unique token.</li>
-        </ul>
-        <p>We will never sell, rent, trade, or share your email address with any third party
-        for marketing purposes.</p>
+      <h2 id="what-we-collect">What we collect</h2>
+      <p>The only personal information we collect is your <strong>email address</strong>,
+      and only when you voluntarily sign up for the newsletter.</p>
+      <p>We do not use third-party analytics, tracking pixels, or advertising cookies.
+      We do not collect IP addresses, device identifiers, or browsing behavior.</p>
 
-        <h2>How we store it</h2>
-        <p>Your email address and a unique unsubscribe token are stored in a MySQL database
-        hosted on Hostinger's servers in the European Union. Access is restricted to this
-        site's application and its operator.</p>
+      <h2 id="how-we-use-it">How we use it</h2>
+      <ul>
+        <li>To send you the Failosaurus Rex newsletter (tech, culture, and whatever we're currently failing at).</li>
+        <li>To send you a one-time confirmation email when you sign up.</li>
+        <li>To process unsubscribe requests tied to your unique token.</li>
+      </ul>
+      <p>We will never sell, rent, trade, or share your email address with any third party
+      for marketing purposes.</p>
 
-        <h2>Unsubscribing</h2>
-        <p>Every email we send includes a one-click unsubscribe link. You can also email
-        <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> and we will
-        remove you within 48 hours. Unsubscribing permanently deletes your email address
-        from our database.</p>
+      <h2 id="how-we-store-it">How we store it</h2>
+      <p>Your email address and a unique unsubscribe token are stored in a MySQL database
+      hosted on Hostinger's servers in the European Union. Access is restricted to this
+      site's application and its operator.</p>
 
-        <h2>Your rights (GDPR &amp; others)</h2>
-        <p>Depending on where you live, you may have the right to:</p>
-        <ul>
-          <li>Access the data we hold about you.</li>
-          <li>Correct inaccurate data.</li>
-          <li>Request deletion of your data.</li>
-          <li>Object to or restrict processing.</li>
-          <li>Withdraw consent at any time (unsubscribing is consent withdrawal).</li>
-        </ul>
-        <p>To exercise any of these rights, email
-        <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+      <h2 id="unsubscribing">Unsubscribing</h2>
+      <p>Every email we send includes a one-click unsubscribe link. You can also email
+      <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> and we will
+      remove you within 48 hours. Unsubscribing permanently deletes your email address
+      from our database.</p>
 
-        <h2>Data retention</h2>
-        <p>We retain your email address for as long as you are subscribed to the newsletter.
-        Unsubscribing deletes your record immediately.</p>
+      <h2 id="your-rights-gdpr-and-others">Your rights (GDPR &amp; others)</h2>
+      <p>Depending on where you live, you may have the right to:</p>
+      <ul>
+        <li>Access the data we hold about you.</li>
+        <li>Correct inaccurate data.</li>
+        <li>Request deletion of your data.</li>
+        <li>Object to or restrict processing.</li>
+        <li>Withdraw consent at any time (unsubscribing is consent withdrawal).</li>
+      </ul>
+      <p>To exercise any of these rights, email
+      <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
 
-        <h2>Cookies</h2>
-        <p>This site does not use cookies.</p>
+      <h2 id="data-retention">Data retention</h2>
+      <p>We retain your email address for as long as you are subscribed to the newsletter.
+      Unsubscribing deletes your record immediately.</p>
 
-        <h2>Children</h2>
-        <p>This site is not directed at children under 13. We do not knowingly collect
-        information from anyone under 13.</p>
+      <h2 id="cookies">Cookies</h2>
+      <p>This site does not use cookies.</p>
 
-        <h2>Changes to this policy</h2>
-        <p>If we make material changes, we will update the effective date at the top of this
-        page. Continued use of the newsletter after that date constitutes acceptance.</p>
+      <h2 id="children">Children</h2>
+      <p>This site is not directed at children under 13. We do not knowingly collect
+      information from anyone under 13.</p>
 
-        <h2>Contact</h2>
-        <p>Questions? Email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+      <h2 id="changes-to-this-policy">Changes to this policy</h2>
+      <p>If we make material changes, we will update the effective date at the top of this
+      page. Continued use of the newsletter after that date constitutes acceptance.</p>
+
+      <h2 id="contact">Contact</h2>
+      <p>Questions? Email <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>.</p>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="inner">
-      <p>&copy; 2026 Failosaurus Rex &middot;
-        <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> &middot;
-        <a href="/privacy.html">Privacy</a> &middot;
-        <a href="/terms.html">Terms</a>
-      </p>
+      <div class="footer-grid">
+        <div>
+          <p>&copy; 2026 Failosaurus Rex</p>
+          <p class="footer-tag">For everyone who was never immediately great at anything.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="/archive.php">Archive</a></li>
+          <li><a href="/privacy.html" aria-current="page">Privacy</a></li>
+          <li><a href="/terms.html">Terms</a></li>
+          <li><a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a></li>
+        </ul>
+      </div>
     </div>
   </footer>
 
