@@ -90,7 +90,7 @@ if ($authed) {
   <header class="site-header">
     <div class="inner">
       <nav class="nav">
-        <a href="/" class="nav-logo">FRX</a>
+        <a href="/" class="nav-logo"><img class="nav-mark" src="/brand/logo-mark.svg" alt="" width="30" height="30"><span>FRX</span></a>
         <?php if ($authed): ?>
         <ul class="nav-links">
           <li><a href="/admin/subscribers.php">Subscribers</a></li>

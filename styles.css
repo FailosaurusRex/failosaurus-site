@@ -576,3 +576,8 @@ img, svg { max-width: 100%; }
   a { text-decoration: underline; }
   h2, h3 { break-after: avoid; }
 }
+
+
+/* Logo mark in nav */
+.nav-logo { display: inline-flex; align-items: center; gap: 10px; }
+.nav-mark { display: block; border-radius: 7px; }
