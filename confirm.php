@@ -126,46 +126,58 @@ HTML;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $done ? "You're confirmed" : 'Something went wrong' ?> — Failosaurus Rex</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#110c08">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
+  <a href="#main" class="skip-link">Skip to content</a>
+
   <header class="site-header">
     <div class="inner">
-      <nav class="nav">
-        <a href="/" class="nav-logo">FRX</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" class="nav-logo"><img class="nav-mark" src="/brand/logo-mark.svg" alt="" width="30" height="30"><span>FRX</span></a>
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
           <li><a href="/#channels">Channels</a></li>
           <li><a href="/#newsletter">Newsletter</a></li>
+          <li><a href="/archive.php">Archive</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero" style="min-height:60vh;display:flex;align-items:center;">
       <div class="inner">
         <?php if ($done): ?>
+          <svg class="status-icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="28" r="25"/><path d="M17 29l8 8 14-17"/></svg>
           <p class="section-label">Confirmed</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">You're in.</h1>
-          <p class="hero-tagline">Welcome to FRX. Every week: tech, culture, and whatever I'm currently failing at.</p>
-          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:8px;">
+          <p class="hero-tagline">Welcome to FRX. Every week: tech, culture, and whatever I'm currently failing at. A welcome note is on its way to your inbox.</p>
+          <div class="actions">
             <?php if (!empty($latest_issue)): ?>
-              <a href="/archive/<?= htmlspecialchars($latest_issue['slug']) ?>" class="btn">Read the latest issue →</a>
-              <a href="/" style="display:inline-flex;align-items:center;color:var(--fg-muted);font-size:0.85rem;text-decoration:none;">Back to site</a>
+              <a href="/archive/<?= htmlspecialchars($latest_issue['slug']) ?>" class="btn">Read the latest issue &rarr;</a>
+              <a href="/" class="btn btn--ghost">Back to site</a>
             <?php else: ?>
               <a href="/" class="btn">Back to the site</a>
             <?php endif; ?>
           </div>
         <?php else: ?>
+          <svg class="status-icon status-icon--error" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 5L52 49H4z"/><path d="M28 21v13M28 41v.5"/></svg>
           <p class="section-label">Oops</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">Something's off.</h1>
-          <p class="hero-tagline"><?= htmlspecialchars($error ?? 'Unknown error.') ?></p>
-          <a href="/" class="btn" style="margin-top:8px;">Back to the site</a>
+          <p class="hero-tagline" role="alert"><?= htmlspecialchars($error ?? 'Unknown error.') ?></p>
+          <div class="actions">
+            <a href="/#newsletter" class="btn">Try signing up again</a>
+            <a href="/" class="btn btn--ghost">Back to the site</a>
+          </div>
         <?php endif; ?>
       </div>
     </section>
@@ -173,7 +185,18 @@ HTML;
 
   <footer class="site-footer">
     <div class="inner">
-      <p>&copy; 2026 Failosaurus Rex &middot; <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a></p>
+      <div class="footer-grid">
+        <div>
+          <p>&copy; 2026 Failosaurus Rex</p>
+          <p class="footer-tag">For everyone who was never immediately great at anything.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="/archive.php">Archive</a></li>
+          <li><a href="/privacy.html">Privacy</a></li>
+          <li><a href="/terms.html">Terms</a></li>
+          <li><a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a></li>
+        </ul>
+      </div>
     </div>
   </footer>
 

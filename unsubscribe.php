@@ -39,36 +39,49 @@ if (!file_exists($config_path)) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,700;1,400&display=swap">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#110c08">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
+  <a href="#main" class="skip-link">Skip to content</a>
+
   <header class="site-header">
     <div class="inner">
-      <nav class="nav">
-        <a href="/" class="nav-logo">FRX</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" class="nav-logo"><img class="nav-mark" src="/brand/logo-mark.svg" alt="" width="30" height="30"><span>FRX</span></a>
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
           <li><a href="/#channels">Channels</a></li>
           <li><a href="/#newsletter">Newsletter</a></li>
+          <li><a href="/archive.php">Archive</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero" style="min-height:60vh;display:flex;align-items:center;">
       <div class="inner">
         <?php if ($done): ?>
+          <svg class="status-icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="28" r="25"/><path d="M18 28h20M30 20l8 8-8 8"/></svg>
           <p class="section-label">Done</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">You're out.</h1>
-          <p class="hero-tagline">No hard feelings. You won't hear from us again.</p>
-          <a href="/" class="btn" style="margin-top:8px;">Back to the site</a>
+          <p class="hero-tagline">No hard feelings. Your email has been removed and you won't hear from us again.</p>
+          <div class="actions">
+            <a href="/" class="btn">Back to the site</a>
+            <a href="/#newsletter" class="btn btn--ghost">Changed your mind? Re-subscribe</a>
+          </div>
         <?php else: ?>
+          <svg class="status-icon status-icon--error" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M28 5L52 49H4z"/><path d="M28 21v13M28 41v.5"/></svg>
           <p class="section-label">Unsubscribe</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">Something's off.</h1>
-          <p class="hero-tagline"><?= htmlspecialchars($error ?? 'Unknown error.') ?></p>
-          <a href="/" class="btn" style="margin-top:8px;">Back to the site</a>
+          <p class="hero-tagline" role="alert"><?= htmlspecialchars($error ?? 'Unknown error.') ?></p>
+          <div class="actions">
+            <a href="mailto:hello@failosaurusrex.com?subject=Unsubscribe" class="btn">Email us to unsubscribe</a>
+            <a href="/" class="btn btn--ghost">Back to the site</a>
+          </div>
         <?php endif; ?>
       </div>
     </section>
@@ -76,7 +89,18 @@ if (!file_exists($config_path)) {
 
   <footer class="site-footer">
     <div class="inner">
-      <p>&copy; 2026 Failosaurus Rex &middot; <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a></p>
+      <div class="footer-grid">
+        <div>
+          <p>&copy; 2026 Failosaurus Rex</p>
+          <p class="footer-tag">For everyone who was never immediately great at anything.</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="/archive.php">Archive</a></li>
+          <li><a href="/privacy.html">Privacy</a></li>
+          <li><a href="/terms.html">Terms</a></li>
+          <li><a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a></li>
+        </ul>
+      </div>
     </div>
   </footer>
 
