@@ -1,6 +1,7 @@
 <?php
 $config_path = dirname(__DIR__) . '/frx-db-config.php';
 $issues = [];
+$library = [];
 
 if (file_exists($config_path)) {
     require $config_path;
@@ -25,6 +26,13 @@ if (file_exists($config_path)) {
     } catch (PDOException $e) {
         // silently serve static pages only
     }
+    if (isset($pdo)) {
+        try {
+            $library = $pdo->query("SELECT slug, updated_at FROM library_items WHERE published = 1 ORDER BY updated_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // library table not created yet
+        }
+    }
 }
 
 header('Content-Type: application/xml; charset=utf-8');
@@ -40,6 +48,12 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 
   <url>
     <loc>https://failosaurusrex.com/archive.php</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://failosaurusrex.com/library.php</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -62,6 +76,14 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
     <lastmod><?= date('Y-m-d', strtotime($issue['sent_at'])) ?></lastmod>
     <changefreq>never</changefreq>
     <priority>0.7</priority>
+  </url>
+<?php endforeach; ?>
+<?php foreach ($library as $item): ?>
+  <url>
+    <loc>https://failosaurusrex.com/library/<?= htmlspecialchars($item['slug'], ENT_XML1, 'UTF-8') ?></loc>
+    <lastmod><?= date('Y-m-d', strtotime($item['updated_at'])) ?></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 <?php endforeach; ?>
 

@@ -190,6 +190,7 @@ try {
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
           <li><a href="/#newsletter">Subscribe</a></li>
+          <li><a href="/library.php">Library</a></li>
           <li><a href="/archive.php" aria-current="page">Archive</a></li>
         </ul>
       </nav>

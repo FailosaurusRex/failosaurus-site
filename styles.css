@@ -773,3 +773,10 @@ img, svg { max-width: 100%; }
   .data thead th { background: #eee; color: #000; }
   .data tr { break-inside: avoid; }
 }
+
+
+/* Five-link nav on very small screens */
+@media (max-width: 420px) {
+  .nav-links { flex-wrap: wrap; width: 100%; justify-content: space-between; gap: 0 10px; }
+  .nav-links a { font-size: 0.66rem; letter-spacing: 0.05em; }
+}
