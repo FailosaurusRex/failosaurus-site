@@ -97,14 +97,15 @@
         <form class="signup-form" onsubmit="handleSubmit(event)">
           <input
             type="email"
+            id="email-input"
             class="email-input"
             placeholder="your@email.com"
             required
             aria-label="Email address"
           >
-          <button type="submit" class="btn">Sign me up</button>
+          <button type="submit" class="btn" id="submit-btn">Sign me up</button>
         </form>
-        <p class="form-note" id="form-msg" hidden>Thanks — you're in.</p>
+        <p class="form-note" id="form-msg" hidden></p>
       </div>
     </section>
 
@@ -117,11 +118,39 @@
   </footer>
 
   <script>
-    // Handle newsletter form — no backend yet, just visual confirmation
-    function handleSubmit(e) {
-      e.preventDefault(); // stops the page from reloading
-      document.getElementById('form-msg').hidden = false;
-      e.target.reset();
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const msg = document.getElementById('form-msg');
+      const email = document.getElementById('email-input').value;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      try {
+        const res = await fetch('/subscribe.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+          msg.textContent = 'Thanks — you\'re in.';
+          msg.style.color = 'var(--accent)';
+          e.target.reset();
+        } else {
+          msg.textContent = data.error || 'Something went wrong. Try again.';
+          msg.style.color = '#ff5040';
+        }
+      } catch {
+        msg.textContent = 'Network error. Try again.';
+        msg.style.color = '#ff5040';
+      }
+
+      msg.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Sign me up';
     }
   </script>
 
