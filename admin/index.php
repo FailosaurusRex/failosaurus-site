@@ -46,7 +46,7 @@ if ($authed) {
             $db_pass,
             [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
         );
-        $sub_count = (int) $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
+        $sub_count = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1")->fetchColumn();
     } catch (PDOException $e) {
         $sub_count = -1;
     }

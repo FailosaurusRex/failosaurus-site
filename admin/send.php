@@ -48,7 +48,7 @@ try {
         $db_pass,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-    $rows = $pdo->query("SELECT email, token FROM subscribers ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $pdo->query("SELECT email, token FROM subscribers WHERE confirmed = 1 ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die('Database error: ' . htmlspecialchars($e->getMessage()));
 }
@@ -242,61 +242,57 @@ function build_email_html(string $preheader, string $body, string $unsub_url): s
 <body style="margin:0;padding:0;background-color:#110c08;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 {$preheader}
 <!-- ═══════════════════════════════════════════════════════════════
-     OUTER WRAPPER — full-bleed dark background
+     OUTER WRAPPER — full-bleed near-black background
      ═══════════════════════════════════════════════════════════════ -->
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#110c08" style="background-color:#110c08;margin:0;padding:0;">
   <tr>
     <td align="center" valign="top" style="padding:36px 16px 56px 16px;">
 
-      <!-- ─── CONTAINER: max 600px ──────────────────────────────── -->
+      <!-- ─── CONTAINER: max 600 px ─────────────────────────────── -->
       <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-        <!-- ╔══════════════════╗
-             ║  TOP ACCENT BAR  ║  4 px neon green
-             ╚══════════════════╝ -->
+        <!-- ╔══════════════════════════════════════════════════════╗
+             ║  TOP ACCENT BAR — 4 px neon green                   ║
+             ╚══════════════════════════════════════════════════════╝ -->
         <tr>
-          <td bgcolor="#39ff14" height="4" style="background-color:#39ff14;font-size:0;line-height:0;mso-line-height-rule:exactly;" aria-hidden="true">&nbsp;</td>
+          <td bgcolor="#39ff14" height="4" style="background-color:#39ff14;font-size:0;line-height:4px;mso-line-height-rule:exactly;" aria-hidden="true">&nbsp;</td>
         </tr>
 
-        <!-- ╔══════════════════╗
-             ║     HEADER       ║
-             ╚══════════════════╝ -->
+        <!-- ╔══════════════════════════════════════════════════════╗
+             ║  HEADER                                              ║
+             ╚══════════════════════════════════════════════════════╝ -->
         <tr>
-          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:28px 40px 26px 40px;">
-            <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td>
-                  <!-- Wordmark -->
-                  <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:34px;font-weight:700;letter-spacing:0.22em;color:#39ff14;line-height:1;mso-line-height-rule:exactly;">FRX</p>
-                  <!-- Brand name -->
-                  <p style="margin:7px 0 0 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:400;letter-spacing:0.18em;color:#7a6e64;line-height:1;text-transform:uppercase;mso-line-height-rule:exactly;">Failosaurus Rex</p>
-                  <!-- Tagline -->
-                  <p style="margin:11px 0 0 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:400;font-style:italic;letter-spacing:0.01em;color:#3a342e;line-height:1.4;mso-line-height-rule:exactly;">For everyone who was never immediately great at anything.</p>
-                </td>
-              </tr>
-            </table>
+          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:36px 40px 32px 40px;">
+            <!-- Wordmark — visually isolated above the sub-brand group -->
+            <p style="margin:0 0 14px 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:36px;font-weight:700;letter-spacing:0.24em;color:#39ff14;line-height:1;mso-line-height-rule:exactly;">FRX</p>
+            <!-- Full brand name — tight pair with tagline below -->
+            <p style="margin:0 0 4px 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:400;letter-spacing:0.2em;color:#7a6e64;line-height:1;text-transform:uppercase;mso-line-height-rule:exactly;">Failosaurus Rex</p>
+            <!-- Tagline — tertiary, intentionally receded but legible -->
+            <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:400;font-style:italic;letter-spacing:0.01em;color:#6b5f57;line-height:1.4;mso-line-height-rule:exactly;">For everyone who was never immediately great at anything.</p>
           </td>
         </tr>
 
-        <!-- 1 px separator: header → content -->
+        <!-- 1 px full-width rule: header → content -->
         <tr>
           <td bgcolor="#2c1f16" height="1" style="background-color:#2c1f16;font-size:0;line-height:0;mso-line-height-rule:exactly;">&nbsp;</td>
         </tr>
 
-        <!-- ╔══════════════════╗
-             ║  CONTENT AREA    ║
-             ╚══════════════════╝ -->
+        <!-- ╔══════════════════════════════════════════════════════╗
+             ║  CONTENT AREA                                        ║
+             ║  Links within {$body} should carry inline style:     ║
+             ║  color:#39ff14;text-decoration:underline;            ║
+             ║  Note: Outlook does not inherit font/color into      ║
+             ║  nested table cells — body tables need own styles.   ║
+             ╚══════════════════════════════════════════════════════╝ -->
         <tr>
-          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:40px 40px 44px 40px;">
-            <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.75;color:#ede5d8;max-width:100%;">
-              {$body}
-            </div>
+          <td bgcolor="#1b1410" style="background-color:#1b1410;padding:40px 40px 48px 40px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.75;color:#ede5d8;mso-line-height-rule:exactly;">
+            {$body}
           </td>
         </tr>
 
-        <!-- ╔══════════════════╗
-             ║    DIVIDER       ║
-             ╚══════════════════╝ -->
+        <!-- 1 px inset rule: content → footer
+             Deliberately inset (40 px per side) to signal a softer break
+             than the full-width header separator above. -->
         <tr>
           <td bgcolor="#1b1410" style="background-color:#1b1410;padding:0 40px;">
             <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -307,16 +303,22 @@ function build_email_html(string $preheader, string $body, string $unsub_url): s
           </td>
         </tr>
 
-        <!-- ╔══════════════════╗
-             ║     FOOTER       ║
-             ╚══════════════════╝ -->
+        <!-- ╔══════════════════════════════════════════════════════╗
+             ║  FOOTER                                              ║
+             ╚══════════════════════════════════════════════════════╝ -->
         <tr>
-          <td bgcolor="#110c08" style="background-color:#110c08;padding:20px 40px 30px 40px;">
-            <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.65;color:#4a3f37;">
+          <td bgcolor="#110c08" style="background-color:#110c08;padding:24px 40px 32px 40px;">
+            <!-- Primary footer: attribution + unsubscribe -->
+            <p style="margin:0 0 8px 0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#7a6e64;mso-line-height-rule:exactly;">
               You&rsquo;re receiving this because you signed up at
-              <a href="https://failosaurusrex.com" style="color:#4a3f37;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">failosaurusrex.com</a>.
+              <a href="https://failosaurusrex.com" style="color:#7a6e64;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">failosaurusrex.com</a>.
               &nbsp;&middot;&nbsp;
-              <a href="{$unsub_esc}" style="color:#4a3f37;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">Unsubscribe</a>
+              <a href="{$unsub_esc}" style="color:#7a6e64;text-decoration:underline;font-family:Arial,Helvetica,sans-serif;">Unsubscribe</a>
+            </p>
+            <!-- Secondary footer: copyright — CAN-SPAM §7(1)(A) also requires
+                 a physical postal address; add it here once confirmed. -->
+            <p style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.5;color:#4d423a;mso-line-height-rule:exactly;">
+              &copy; 2026 Failosaurus Rex
             </p>
           </td>
         </tr>

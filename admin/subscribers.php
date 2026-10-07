@@ -21,25 +21,27 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
-    $total = (int) $pdo->query("SELECT COUNT(*) FROM subscribers")->fetchColumn();
+    $total   = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1")->fetchColumn();
+    $pending = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 0")->fetchColumn();
 
-    $today = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE DATE(created_at) = CURDATE()")->fetchColumn();
-    $week  = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE created_at >= NOW() - INTERVAL 7 DAY")->fetchColumn();
-    $month = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE created_at >= NOW() - INTERVAL 30 DAY")->fetchColumn();
+    $today = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1 AND DATE(created_at) = CURDATE()")->fetchColumn();
+    $week  = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1 AND created_at >= NOW() - INTERVAL 7 DAY")->fetchColumn();
+    $month = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1 AND created_at >= NOW() - INTERVAL 30 DAY")->fetchColumn();
 
-    // Daily signups for the last 30 days (for the sparkline)
+    // Daily confirmed signups for the last 30 days (for the sparkline)
     $daily = $pdo->query("
         SELECT DATE(created_at) AS day, COUNT(*) AS n
         FROM subscribers
-        WHERE created_at >= NOW() - INTERVAL 30 DAY
+        WHERE confirmed = 1 AND created_at >= NOW() - INTERVAL 30 DAY
         GROUP BY day
         ORDER BY day ASC
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Recent signups
+    // Recent confirmed signups
     $recent = $pdo->query("
         SELECT email, created_at
         FROM subscribers
+        WHERE confirmed = 1
         ORDER BY created_at DESC
         LIMIT 25
     ")->fetchAll(PDO::FETCH_ASSOC);
@@ -71,7 +73,7 @@ $chart_labels = json_encode(array_map(fn($d) => date('M j', strtotime($d)), arra
   <link rel="stylesheet" href="/styles.css">
   <style>
     .dash-wrap { max-width: 780px; }
-    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
+    .stat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 1.5rem 0 2rem; }
     .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.2rem; }
     .stat-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem; }
     .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--accent); letter-spacing: 0.04em; line-height: 1; }
@@ -123,6 +125,10 @@ $chart_labels = json_encode(array_map(fn($d) => date('M j', strtotime($d)), arra
           <div class="stat-card">
             <div class="stat-label">Last 30 days</div>
             <div class="stat-value"><?= number_format($month) ?></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending confirm</div>
+            <div class="stat-value" style="color:var(--fg-muted);"><?= number_format($pending) ?></div>
           </div>
         </div>
 
