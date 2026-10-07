@@ -1,0 +1,5 @@
+# Never commit credentials
+frx-db-config.php
+
+# Composer dev tools (vendor itself IS committed so Hostinger has the files)
+.DS_Store
