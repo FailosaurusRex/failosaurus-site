@@ -100,6 +100,7 @@ if ($authed) {
         <?php if ($authed): ?>
         <ul class="nav-links">
           <li><a href="/admin/logs.php">Logs</a></li>
+          <li><a href="/admin/change-password.php">Password</a></li>
           <li><a href="/admin/?logout=1" class="logout-link">Log out</a></li>
         </ul>
         <?php endif; ?>
