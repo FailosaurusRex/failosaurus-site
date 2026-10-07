@@ -67,12 +67,22 @@ try {
   <?php if ($page_mode === 'issue'): ?>
   <title><?= htmlspecialchars($issue['title']) ?> — FRX</title>
   <meta name="description" content="<?= htmlspecialchars($issue['preview_text'] ?: 'Failosaurus Rex newsletter') ?>">
+  <meta property="og:title"       content="<?= htmlspecialchars($issue['title']) ?> — FRX">
+  <meta property="og:description" content="<?= htmlspecialchars($issue['preview_text'] ?: 'Failosaurus Rex newsletter') ?>">
+  <meta property="og:url"         content="https://failosaurusrex.com/archive/<?= htmlspecialchars($slug) ?>">
   <?php elseif ($page_mode === 'listing'): ?>
   <title>Archive — Failosaurus Rex</title>
   <meta name="description" content="Every issue of the Failosaurus Rex newsletter, in one place.">
+  <meta property="og:title"       content="Archive — Failosaurus Rex">
+  <meta property="og:description" content="Every issue of the Failosaurus Rex newsletter, in one place.">
+  <meta property="og:url"         content="https://failosaurusrex.com/archive.php">
   <?php else: ?>
   <title>Not found — FRX</title>
   <?php endif; ?>
+  <meta property="og:type"  content="website">
+  <meta property="og:image" content="https://failosaurusrex.com/og-image.png">
+  <meta name="twitter:card"  content="summary_large_image">
+  <meta name="twitter:image" content="https://failosaurusrex.com/og-image.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -2,3 +2,9 @@ RewriteEngine On
 
 # Route /archive/{slug} to archive.php
 RewriteRule ^archive/([a-z0-9\-]+)/?$ /archive.php [L,QSA]
+
+# Custom error pages
+ErrorDocument 404 /404.html
+
+# Sitemap
+RewriteRule ^sitemap\.xml$ /sitemap.php [L,QSA]
