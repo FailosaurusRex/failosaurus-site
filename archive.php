@@ -25,6 +25,17 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
+    $pdo->exec("CREATE TABLE IF NOT EXISTS issues (
+        id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        slug         VARCHAR(120) NOT NULL UNIQUE,
+        title        VARCHAR(200) NOT NULL,
+        preview_text VARCHAR(200) NOT NULL DEFAULT '',
+        body_html    MEDIUMTEXT   NOT NULL,
+        body_plain   TEXT         NOT NULL DEFAULT '',
+        sent_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_sent (sent_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
     if ($slug !== '') {
         // ── Single issue view ─────────────────────────────────────────────
         $stmt = $pdo->prepare("SELECT title, preview_text, body_html, sent_at FROM issues WHERE slug = :slug LIMIT 1");
