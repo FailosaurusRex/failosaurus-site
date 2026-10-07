@@ -40,6 +40,13 @@ if (!file_exists($config_path)) {
                 $unsub_url = 'https://failosaurusrex.com/unsubscribe.php?token=' . $sub['token'];
                 send_welcome($sub['email'], $smtp_pass, $unsub_url);
             }
+
+            // Fetch latest issue to show on confirmation page
+            $latest_issue = null;
+            try {
+                $li = $pdo->query("SELECT slug, title FROM issues ORDER BY sent_at DESC LIMIT 1");
+                $latest_issue = $li ? $li->fetch(PDO::FETCH_ASSOC) : null;
+            } catch (PDOException $e) { /* table may not exist yet */ }
         } catch (PDOException $e) {
             $error = 'Something went wrong. Please email hello@failosaurusrex.com.';
         }
@@ -145,8 +152,15 @@ HTML;
         <?php if ($done): ?>
           <p class="section-label">Confirmed</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">You're in.</h1>
-          <p class="hero-tagline">Welcome to FRX. First issue hits your inbox soon.</p>
-          <a href="/" class="btn" style="margin-top:8px;">Back to the site</a>
+          <p class="hero-tagline">Welcome to FRX. Every week: tech, culture, and whatever I'm currently failing at.</p>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:8px;">
+            <?php if (!empty($latest_issue)): ?>
+              <a href="/archive/<?= htmlspecialchars($latest_issue['slug']) ?>" class="btn">Read the latest issue →</a>
+              <a href="/" style="display:inline-flex;align-items:center;color:var(--fg-muted);font-size:0.85rem;text-decoration:none;">Back to site</a>
+            <?php else: ?>
+              <a href="/" class="btn">Back to the site</a>
+            <?php endif; ?>
+          </div>
         <?php else: ?>
           <p class="section-label">Oops</p>
           <h1 class="hero-name" style="font-size:clamp(3rem,8vw,6rem);">Something's off.</h1>

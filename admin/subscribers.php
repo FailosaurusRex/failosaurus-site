@@ -44,13 +44,23 @@ try {
         ORDER BY day ASC
     ")->fetchAll(PDO::FETCH_ASSOC);
 
-    // Recent confirmed signups
-    $recent = $pdo->query("
+    // Handle delete
+    $delete_msg = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'], $_POST['email']) && $_POST['action'] === 'delete') {
+        $del = $pdo->prepare("DELETE FROM subscribers WHERE email = :email");
+        $del->execute([':email' => $_POST['email']]);
+        $delete_msg = $del->rowCount() ? 'Subscriber removed.' : 'Not found.';
+        // Refresh counts
+        $total   = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 1")->fetchColumn();
+        $pending = (int) $pdo->query("SELECT COUNT(*) FROM subscribers WHERE confirmed = 0")->fetchColumn();
+    }
+
+    // All confirmed subscribers (for the management table)
+    $all_subs = $pdo->query("
         SELECT email, created_at
         FROM subscribers
         WHERE confirmed = 1
         ORDER BY created_at DESC
-        LIMIT 25
     ")->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
@@ -145,25 +155,41 @@ $chart_labels = json_encode(array_map(fn($d) => date('M j', strtotime($d)), arra
           <canvas id="chart" height="120"></canvas>
         </div>
 
-        <table class="sub-table">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;margin-bottom:1rem;">
+          <input type="search" id="sub-search" placeholder="Filter by email…"
+            style="background:var(--bg-card);border:1px solid var(--border);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.5rem 0.8rem;border-radius:4px;outline:none;width:260px;">
+          <a href="/admin/export-subscribers.php" class="btn" style="font-size:0.8rem;padding:0.45rem 1rem;">Export CSV</a>
+        </div>
+
+        <?php if ($delete_msg): ?>
+          <p style="font-size:0.85rem;color:var(--accent);margin-bottom:0.8rem;"><?= htmlspecialchars($delete_msg) ?></p>
+        <?php endif; ?>
+
+        <table class="sub-table" id="sub-table">
           <thead>
             <tr>
               <th>Email</th>
               <th>Signed up</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($recent as $r): ?>
+            <?php foreach ($all_subs as $r): ?>
             <tr>
               <td><?= htmlspecialchars($r['email']) ?></td>
               <td><?= date('M j, Y g:ia', strtotime($r['created_at'])) ?></td>
+              <td style="text-align:right;">
+                <form method="POST" style="display:inline;" onsubmit="return confirm('Remove <?= htmlspecialchars(addslashes($r['email'])) ?>?');">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="email" value="<?= htmlspecialchars($r['email']) ?>">
+                  <button type="submit" style="background:none;border:none;cursor:pointer;font-size:0.75rem;color:#ff5040;font-family:'DM Sans',sans-serif;padding:0;">Remove</button>
+                </form>
+              </td>
             </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
-        <?php if ($total > 25): ?>
-          <p style="font-size:0.8rem;color:var(--fg-muted);margin-top:0.8rem;">Showing 25 most recent of <?= number_format($total) ?> total.</p>
-        <?php endif; ?>
+        <p style="font-size:0.8rem;color:var(--fg-muted);margin-top:0.8rem;" id="sub-count-label"><?= number_format($total) ?> confirmed subscriber<?= $total !== 1 ? 's' : '' ?></p>
 
       </div>
     </section>
@@ -245,6 +271,27 @@ $chart_labels = json_encode(array_map(fn($d) => date('M j', strtotime($d)), arra
         }
       });
     })();
+
+    // Live search filter
+    const searchInput = document.getElementById('sub-search');
+    const table       = document.getElementById('sub-table');
+    const label       = document.getElementById('sub-count-label');
+    const allRows     = Array.from(table.querySelectorAll('tbody tr'));
+    const totalCount  = allRows.length;
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+      allRows.forEach(row => {
+        const email = row.cells[0].textContent.toLowerCase();
+        const show  = q === '' || email.includes(q);
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      label.textContent = q
+        ? `${visible} of ${totalCount} subscriber${totalCount !== 1 ? 's' : ''} match`
+        : `${totalCount} confirmed subscriber${totalCount !== 1 ? 's' : ''}`;
+    });
   </script>
 
 </body>
