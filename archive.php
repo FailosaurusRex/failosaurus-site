@@ -17,6 +17,41 @@ if (preg_match('#^/archive/([a-z0-9\-]+)/?$#', strtok($path, '?'), $m)) {
     $slug = $_GET['slug'];
 }
 
+function e($v) { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
+
+function plain_text($html) {
+    $html = preg_replace('#<(script|style)\b.*?</\1>#is', ' ', $html);
+    $html = preg_replace('#<(br|/p|/h[1-6]|/li|/div|/blockquote|/tr)\b[^>]*>#i', ' ', $html);
+    $t = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    return trim(preg_replace('/\s+/u', ' ', $t));
+}
+
+function reading_minutes($plain) {
+    return max(1, (int)ceil(str_word_count($plain) / 220));
+}
+
+function excerpt($plain, $len = 160) {
+    if (mb_strlen($plain) <= $len) return $plain;
+    $cut = mb_substr($plain, 0, $len);
+    $sp = mb_strrpos($cut, ' ');
+    if ($sp !== false && $sp > $len * 0.6) $cut = mb_substr($cut, 0, $sp);
+    return rtrim($cut, " ,.;:-") . '…';
+}
+
+function strip_duplicate_heading($html, $title) {
+    $norm = function ($h) { return mb_strtolower(plain_text($h)); };
+    $pat = '#^\s*<(h[1-3])\b[^>]*>(.*?)</\1>\s*#is';
+    for ($n = 0; $n < 2 && preg_match($pat, $html, $m); $n++) {
+        $txt = $norm($m[2]);
+        if ($txt === mb_strtolower(trim($title)) || preg_match('/^issue\s*#?\s*\d+\b/', $txt)) {
+            $html = substr($html, strlen($m[0]));
+        } else {
+            break;
+        }
+    }
+    return $html;
+}
+
 try {
     $pdo = new PDO(
         "mysql:host=$db_host;dbname=$db_name;charset=utf8mb4",
@@ -38,7 +73,7 @@ try {
 
     if ($slug !== '') {
         // ── Single issue view ─────────────────────────────────────────────
-        $stmt = $pdo->prepare("SELECT title, preview_text, body_html, sent_at FROM issues WHERE slug = :slug LIMIT 1");
+        $stmt = $pdo->prepare("SELECT id, title, preview_text, body_html, sent_at FROM issues WHERE slug = :slug LIMIT 1");
         $stmt->execute([':slug' => $slug]);
         $issue = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,10 +82,29 @@ try {
             $page_mode = 'not_found';
         } else {
             $page_mode = 'issue';
+            $q = $pdo->prepare("SELECT COUNT(*) FROM issues WHERE sent_at < :s1 OR (sent_at = :s2 AND id <= :i)");
+            $q->execute([':s1' => $issue['sent_at'], ':s2' => $issue['sent_at'], ':i' => $issue['id']]);
+            $issue_no = (int)$q->fetchColumn();
+
+            $q = $pdo->prepare("SELECT slug, title FROM issues WHERE sent_at < :s1 OR (sent_at = :s2 AND id < :i) ORDER BY sent_at DESC, id DESC LIMIT 1");
+            $q->execute([':s1' => $issue['sent_at'], ':s2' => $issue['sent_at'], ':i' => $issue['id']]);
+            $prev_issue = $q->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            $q = $pdo->prepare("SELECT slug, title FROM issues WHERE sent_at > :s1 OR (sent_at = :s2 AND id > :i) ORDER BY sent_at ASC, id ASC LIMIT 1");
+            $q->execute([':s1' => $issue['sent_at'], ':s2' => $issue['sent_at'], ':i' => $issue['id']]);
+            $next_issue = $q->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            $body = $issue['body_html'];
+            $plain = plain_text($body);
+            $read_min = reading_minutes($plain);
+            $body = strip_duplicate_heading($body, $issue['title']);
+            $desc = $issue['preview_text'] !== '' ? $issue['preview_text'] : excerpt($plain, 160);
+            if ($desc === '') $desc = 'Failosaurus Rex newsletter';
+            $ts = strtotime($issue['sent_at']);
         }
     } else {
         // ── Listing view ──────────────────────────────────────────────────
-        $issues = $pdo->query("SELECT slug, title, preview_text, sent_at FROM issues ORDER BY sent_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+        $issues = $pdo->query("SELECT slug, title, preview_text, body_html, sent_at FROM issues ORDER BY sent_at DESC, id DESC")->fetchAll(PDO::FETCH_ASSOC);
         $page_mode = 'listing';
     }
 
@@ -65,21 +119,48 @@ try {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?php if ($page_mode === 'issue'): ?>
-  <title><?= htmlspecialchars($issue['title']) ?> — FRX</title>
-  <meta name="description" content="<?= htmlspecialchars($issue['preview_text'] ?: 'Failosaurus Rex newsletter') ?>">
-  <meta property="og:title"       content="<?= htmlspecialchars($issue['title']) ?> — FRX">
-  <meta property="og:description" content="<?= htmlspecialchars($issue['preview_text'] ?: 'Failosaurus Rex newsletter') ?>">
-  <meta property="og:url"         content="https://failosaurusrex.com/archive/<?= htmlspecialchars($slug) ?>">
+  <?php $url = 'https://failosaurusrex.com/archive/' . $slug; ?>
+  <title><?= e($issue['title']) ?> — FRX</title>
+  <meta name="description" content="<?= e($desc) ?>">
+  <link rel="canonical" href="<?= e($url) ?>">
+  <meta property="og:title"       content="<?= e($issue['title']) ?> — FRX">
+  <meta property="og:description" content="<?= e($desc) ?>">
+  <meta property="og:url"         content="<?= e($url) ?>">
+  <meta property="og:type"        content="article">
+  <meta property="article:published_time" content="<?= e(date('c', $ts)) ?>">
+  <script type="application/ld+json"><?= json_encode([
+      '@context' => 'https://schema.org',
+      '@type' => 'Article',
+      'headline' => $issue['title'],
+      'description' => $desc,
+      'datePublished' => date('c', $ts),
+      'mainEntityOfPage' => $url,
+      'image' => 'https://failosaurusrex.com/og-image.png',
+      'author' => ['@type' => 'Person', 'name' => 'Failosaurus Rex'],
+      'publisher' => ['@type' => 'Organization', 'name' => 'Failosaurus Rex', 'url' => 'https://failosaurusrex.com/'],
+  ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
   <?php elseif ($page_mode === 'listing'): ?>
   <title>Archive — Failosaurus Rex</title>
   <meta name="description" content="Every issue of the Failosaurus Rex newsletter, in one place.">
+  <link rel="canonical" href="https://failosaurusrex.com/archive.php">
   <meta property="og:title"       content="Archive — Failosaurus Rex">
   <meta property="og:description" content="Every issue of the Failosaurus Rex newsletter, in one place.">
   <meta property="og:url"         content="https://failosaurusrex.com/archive.php">
+  <meta property="og:type"        content="website">
+  <script type="application/ld+json"><?= json_encode([
+      '@context' => 'https://schema.org',
+      '@type' => 'Blog',
+      'name' => 'Failosaurus Rex',
+      'url' => 'https://failosaurusrex.com/archive.php',
+      'description' => 'Every issue of the Failosaurus Rex newsletter, in one place.',
+  ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?></script>
   <?php else: ?>
   <title>Not found — FRX</title>
+  <meta name="robots" content="noindex">
   <?php endif; ?>
-  <meta property="og:type"  content="website">
+  <?php if ($page_mode !== 'issue'): ?>
+  <meta property="og:type" content="website">
+  <?php endif; ?>
   <meta property="og:image" content="https://failosaurusrex.com/og-image.png">
   <meta name="twitter:card"  content="summary_large_image">
   <meta name="twitter:image" content="https://failosaurusrex.com/og-image.png">
@@ -90,34 +171,13 @@ try {
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Failosaurus Rex" href="/rss.php">
   <link rel="stylesheet" href="/styles.css">
-  <style>
-    .archive-wrap { max-width: 680px; }
-
-    /* Listing */
-    .issue-list { list-style: none; padding: 0; margin: 2rem 0 0; }
-    .issue-item { border-bottom: 1px solid var(--border); padding: 1.4rem 0; }
-    .issue-item:first-child { border-top: 1px solid var(--border); }
-    .issue-date { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-muted); margin-bottom: 0.4rem; }
-    .issue-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; line-height: 1.15; margin-bottom: 0.4rem; }
-    .issue-title a { color: var(--fg); text-decoration: none; }
-    .issue-title a:hover { color: var(--accent); }
-    .issue-preview { font-size: 0.9rem; color: var(--fg-muted); line-height: 1.55; margin: 0; }
-    .issue-read-link { display: inline-block; margin-top: 0.6rem; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); text-decoration: none; }
-    .issue-read-link:hover { text-decoration: underline; }
-
-    /* Single issue */
-    .issue-body { margin-top: 2rem; font-size: 1rem; line-height: 1.75; color: var(--fg); }
-    .issue-body p { margin: 0 0 1.2rem; }
-    .issue-body h2, .issue-body h3 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; color: var(--fg); }
-    .issue-body a { color: var(--accent); }
-    .issue-body img { max-width: 100%; height: auto; }
-    .back-link { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-muted); text-decoration: none; display: inline-block; margin-bottom: 2rem; }
-    .back-link:hover { color: var(--fg); }
-    .back-link::before { content: '← '; }
-    .empty-state { color: var(--fg-muted); font-size: 0.95rem; margin-top: 2rem; }
-  </style>
+  <link rel="stylesheet" href="/archive.css">
 </head>
 <body>
+
+  <?php if ($page_mode === 'issue'): ?>
+  <div class="read-progress" id="read-progress" aria-hidden="true"></div>
+  <?php endif; ?>
 
   <header class="site-header">
     <div class="inner">
@@ -126,64 +186,151 @@ try {
         <ul class="nav-links">
           <li><a href="/#about">About</a></li>
           <li><a href="/#newsletter">Subscribe</a></li>
-          <li><a href="/archive.php">Archive</a></li>
+          <li><a href="/archive.php" aria-current="page">Archive</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="section" style="border-bottom:none;">
+    <section class="section archive-section">
       <div class="inner archive-wrap">
 
         <?php if ($page_mode === 'listing'): ?>
 
           <p class="section-label">Newsletter</p>
           <h1 class="section-heading">Archive.</h1>
-          <p class="section-body">Every issue, in one place.</p>
+          <p class="section-body">Every issue, in one place.
+            <?php if (!empty($issues)): ?><span class="archive-count"><?= count($issues) ?> <?= count($issues) === 1 ? 'issue' : 'issues' ?></span><?php endif; ?>
+          </p>
 
           <?php if (empty($issues)): ?>
-            <p class="empty-state">No issues yet — check back soon.</p>
-          <?php else: ?>
-            <ul class="issue-list">
-              <?php foreach ($issues as $i): ?>
+            <div class="empty-card">
+              <p class="empty-title">Nothing here yet.</p>
+              <p class="empty-copy">The dinosaur is still working on issue one. It is, naturally, not going perfectly. That is rather the point.</p>
+              <a class="btn" href="/#newsletter">Get the first one in your inbox</a>
+            </div>
+          <?php else: $total = count($issues); ?>
+            <ol class="issue-list">
+              <?php foreach ($issues as $idx => $i):
+                  $ip = plain_text($i['body_html']);
+                  $ex = $i['preview_text'] !== '' ? $i['preview_text'] : excerpt($ip, 160);
+                  $href = '/archive/' . e($i['slug']);
+                  $its = strtotime($i['sent_at']);
+              ?>
               <li class="issue-item">
-                <p class="issue-date"><?= date('F j, Y', strtotime($i['sent_at'])) ?></p>
-                <p class="issue-title">
-                  <a href="/archive/<?= htmlspecialchars($i['slug']) ?>"><?= htmlspecialchars($i['title']) ?></a>
-                </p>
-                <?php if ($i['preview_text'] !== ''): ?>
-                  <p class="issue-preview"><?= htmlspecialchars($i['preview_text']) ?></p>
-                <?php endif; ?>
-                <a class="issue-read-link" href="/archive/<?= htmlspecialchars($i['slug']) ?>">Read issue →</a>
+                <a class="issue-card" href="<?= $href ?>">
+                  <p class="issue-meta">
+                    <span class="issue-num">No. <?= $total - $idx ?></span>
+                    <time datetime="<?= e(date('Y-m-d', $its)) ?>"><?= e(date('M j, Y', $its)) ?></time>
+                    <span><?= reading_minutes($ip) ?> min read</span>
+                  </p>
+                  <h2 class="issue-title"><?= e($i['title']) ?></h2>
+                  <?php if ($ex !== ''): ?><p class="issue-preview"><?= e($ex) ?></p><?php endif; ?>
+                  <span class="issue-read-link">Read issue <span aria-hidden="true">→</span></span>
+                </a>
               </li>
               <?php endforeach; ?>
-            </ul>
+            </ol>
           <?php endif; ?>
 
         <?php elseif ($page_mode === 'issue'): ?>
 
           <a class="back-link" href="/archive.php">All issues</a>
 
-          <p class="section-label"><?= date('F j, Y', strtotime($issue['sent_at'])) ?></p>
-          <h1 class="section-heading"><?= htmlspecialchars($issue['title']) ?></h1>
+          <article class="issue">
+            <header class="issue-head">
+              <p class="issue-meta">
+                <span class="issue-num">No. <?= $issue_no ?></span>
+                <time datetime="<?= e(date('Y-m-d', $ts)) ?>"><?= e(date('F j, Y', $ts)) ?></time>
+                <span><?= $read_min ?> min read</span>
+              </p>
+              <h1 class="issue-h1"><?= e($issue['title']) ?></h1>
+              <?php if ($issue['preview_text'] !== ''): ?><p class="issue-dek"><?= e($issue['preview_text']) ?></p><?php endif; ?>
+            </header>
 
-          <div class="issue-body">
-            <?= $issue['body_html'] ?>
-          </div>
+            <div class="issue-body">
+              <?= $body ?>
+            </div>
 
-          <div style="margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);">
-            <p style="font-size:0.85rem;color:var(--fg-muted);">
-              Enjoyed this? <a href="/#newsletter" style="color:var(--accent);">Subscribe to get the next issue</a> in your inbox.
-            </p>
-            <a class="back-link" href="/archive.php" style="margin-top:0.8rem;">All issues</a>
-          </div>
+            <div class="share-row" id="share-row" hidden>
+              <span class="share-label">Pass it on</span>
+              <button type="button" class="share-btn" id="share-btn" data-title="<?= e($issue['title']) ?>" data-url="<?= e($url) ?>">Share</button>
+              <button type="button" class="share-btn" id="copy-btn" data-url="<?= e($url) ?>">Copy link</button>
+              <span class="share-status" id="share-status" role="status" aria-live="polite"></span>
+            </div>
+          </article>
+
+          <aside class="cta-card" aria-labelledby="cta-title">
+            <p class="cta-kicker">Weekly. Free.</p>
+            <h2 class="cta-title" id="cta-title">Enjoyed this? Get the next one.</h2>
+            <p class="cta-copy">For everyone who was never immediately great at anything. One email a week, no spam.</p>
+            <a class="btn" href="/#newsletter">Subscribe</a>
+          </aside>
+
+          <nav class="issue-nav" aria-label="More issues">
+            <?php if ($prev_issue): ?>
+            <a class="issue-nav-link prev" href="/archive/<?= e($prev_issue['slug']) ?>" rel="prev">
+              <span class="issue-nav-dir"><span aria-hidden="true">←</span> Previous</span>
+              <span class="issue-nav-title"><?= e($prev_issue['title']) ?></span>
+            </a>
+            <?php endif; ?>
+            <?php if ($next_issue): ?>
+            <a class="issue-nav-link next" href="/archive/<?= e($next_issue['slug']) ?>" rel="next">
+              <span class="issue-nav-dir">Next <span aria-hidden="true">→</span></span>
+              <span class="issue-nav-title"><?= e($next_issue['title']) ?></span>
+            </a>
+            <?php endif; ?>
+          </nav>
+
+          <a class="back-link back-bottom" href="/archive.php">All issues</a>
+
+          <script>
+          (function () {
+            var bar = document.getElementById('read-progress');
+            if (bar) {
+              var tick = false;
+              var update = function () {
+                tick = false;
+                var h = document.documentElement.scrollHeight - window.innerHeight;
+                bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, window.scrollY / h) : 0) + ')';
+              };
+              window.addEventListener('scroll', function () { if (!tick) { tick = true; requestAnimationFrame(update); } }, { passive: true });
+              window.addEventListener('resize', update);
+              bar.classList.add('on');
+              update();
+            }
+            var status = document.getElementById('share-status');
+            var say = function (m) { if (status) { status.textContent = m; setTimeout(function () { status.textContent = ''; }, 2500); } };
+            var row = document.getElementById('share-row');
+            if (row) row.hidden = false;
+            var share = document.getElementById('share-btn');
+            var copy = document.getElementById('copy-btn');
+            if (share && !navigator.share) share.hidden = true;
+            if (share && navigator.share) share.addEventListener('click', function () {
+              navigator.share({ title: share.dataset.title, url: share.dataset.url }).catch(function () {});
+            });
+            if (copy) copy.addEventListener('click', function () {
+              var u = copy.dataset.url;
+              var fallback = function () {
+                var t = document.createElement('textarea');
+                t.value = u; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+                document.body.appendChild(t); t.select();
+                try { document.execCommand('copy'); say('Link copied'); } catch (e) { say('Copy failed'); }
+                document.body.removeChild(t);
+              };
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(u).then(function () { say('Link copied'); }, fallback);
+              } else { fallback(); }
+            });
+          })();
+          </script>
 
         <?php else: ?>
 
           <p class="section-label">404</p>
           <h1 class="section-heading">Not found.</h1>
-          <p class="section-body">That issue doesn't exist. <a href="/archive.php" style="color:var(--accent);">Browse all issues</a>.</p>
+          <p class="section-body">That issue doesn't exist. <a class="text-link" href="/archive.php">Browse all issues</a>.</p>
 
         <?php endif; ?>
 

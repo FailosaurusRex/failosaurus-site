@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<!--
-  Failosaurus Rex — V1
-  Structure: nav → hero → about → channels → newsletter → footer
-  All one page. Each section has an id so nav links jump to it.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Failosaurus Rex</title>
+  <meta name="theme-color" content="#110c08">
+  <link rel="canonical" href="https://failosaurusrex.com/">
   <meta name="description" content="For everyone who was never immediately great at anything.">
 
   <!-- Open Graph -->
@@ -33,15 +30,42 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="Failosaurus Rex" href="/rss.php">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="home.css">
+  <script>document.documentElement.classList.add('js');</script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://failosaurusrex.com/#website",
+        "url": "https://failosaurusrex.com/",
+        "name": "Failosaurus Rex",
+        "description": "For everyone who was never immediately great at anything.",
+        "publisher": { "@id": "https://failosaurusrex.com/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://failosaurusrex.com/#org",
+        "name": "Failosaurus Rex",
+        "url": "https://failosaurusrex.com/",
+        "logo": "https://failosaurusrex.com/og-image.png",
+        "email": "hello@failosaurusrex.com"
+      }
+    ]
+  }
+  </script>
 </head>
 
-<body>
+<body class="home">
 
-  <!-- NAV: sticky bar at the top -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <div class="inner">
-      <nav class="nav">
-        <a href="/" class="nav-logo">FRX</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" class="nav-logo" aria-label="Failosaurus Rex home">FRX</a>
         <ul class="nav-links">
           <li><a href="#about">About</a></li>
           <li><a href="#channels">Channels</a></li>
@@ -52,77 +76,135 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
 
-    <!-- HERO: the first thing people see -->
     <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
       <div class="inner">
-        <h1 class="hero-name">Failosaurus<br>Rex</h1>
-        <p class="hero-tagline">For everyone who was never immediately great at anything.</p>
-        <a href="#newsletter" class="btn">Get the newsletter</a>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section class="section" id="about">
-      <div class="inner">
-        <p class="section-label">About</p>
-        <h2 class="section-heading">Not a highlight reel.</h2>
-        <p class="section-body">
-          This is a place for the average. For everyone who picks something up,
-          immediately struggles, and keeps going anyway. No expertise required.
-          No performance of confidence. Just the honest version of figuring it out.
+        <p class="hero-kicker reveal">Est. 2026 &middot; Still learning how</p>
+        <h1 class="hero-name reveal">Failosaurus<br>Rex<span class="cursor" aria-hidden="true"></span></h1>
+        <p class="hero-tagline reveal">For everyone who was never immediately great at anything.</p>
+        <p class="hero-bad reveal">
+          Currently bad at:
+          <span class="rotator" id="rotator" aria-live="off">cooking rice</span>
         </p>
+        <div class="hero-cta reveal">
+          <a href="#newsletter" class="btn">Get the newsletter</a>
+          <a href="#about" class="hero-link">Why this exists <span aria-hidden="true">&darr;</span></a>
+        </div>
       </div>
     </section>
 
-    <!-- CHANNELS -->
-    <section class="section" id="channels">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <ul>
+          <li>Attempt 1 of many</li><li>Skill issue</li><li>Day one energy</li><li>Learning in public</li><li>It worked eventually</li><li>Mostly vibes</li><li>Failing forward, slowly</li><li>Beginner on purpose</li>
+        </ul>
+        <ul>
+          <li>Attempt 1 of many</li><li>Skill issue</li><li>Day one energy</li><li>Learning in public</li><li>It worked eventually</li><li>Mostly vibes</li><li>Failing forward, slowly</li><li>Beginner on purpose</li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="section section--about" id="about">
       <div class="inner">
-        <p class="section-label">Channels</p>
-        <h2 class="section-heading">Where to find me.</h2>
+        <p class="section-label reveal">About</p>
+        <h2 class="section-heading reveal">Not a highlight reel.</h2>
+        <div class="about-copy">
+          <p class="section-body reveal">
+            This is a place for the average. For everyone who picks something up,
+            immediately struggles, and keeps going anyway. No expertise required.
+            No performance of confidence. Just the honest version of figuring it out.
+          </p>
+          <p class="section-body reveal">
+            Most of what you see online is the final take. Here you get the other
+            takes: the wrong turns, the embarrassing first attempts, and the
+            boring middle where things slowly get less bad.
+          </p>
+        </div>
+
+        <ol class="pillars">
+          <li class="pillar reveal">
+            <span class="pillar-num" aria-hidden="true">01</span>
+            <h3>Honest process</h3>
+            <p>What I tried, what broke, what I would do differently. Receipts included.</p>
+          </li>
+          <li class="pillar reveal">
+            <span class="pillar-num" aria-hidden="true">02</span>
+            <h3>No expertise required</h3>
+            <p>Start from zero. Nobody here is pretending to be an expert, least of all me.</p>
+          </li>
+          <li class="pillar reveal">
+            <span class="pillar-num" aria-hidden="true">03</span>
+            <h3>Weekly, not constant</h3>
+            <p>One email a week. Enough to keep going, not enough to feel behind.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section--channels" id="channels">
+      <div class="inner">
+        <p class="section-label reveal">Channels</p>
+        <h2 class="section-heading reveal">Where to find me.</h2>
+        <p class="section-body reveal">The newsletter is live. The rest is under construction, in public, badly.</p>
         <div class="channel-grid">
 
-          <div class="channel-card channel-card--soon">
-            <p class="channel-platform">TikTok</p>
+          <article class="channel-card reveal">
+            <span class="status"><span class="status-dot" aria-hidden="true"></span>Being built</span>
+            <h3 class="channel-platform">TikTok</h3>
             <p class="channel-desc">Short, chaotic, and possibly embarrassing. Discovery starts here.</p>
-            <span class="channel-soon">Coming soon</span>
-          </div>
+            <div class="build-bar" role="img" aria-label="Progress: early"><span style="--p:25%"></span></div>
+          </article>
 
-          <div class="channel-card channel-card--soon">
-            <p class="channel-platform">YouTube</p>
+          <article class="channel-card reveal">
+            <span class="status"><span class="status-dot" aria-hidden="true"></span>Being built</span>
+            <h3 class="channel-platform">YouTube</h3>
             <p class="channel-desc">Longer form. Deep dives, reactions, and attempts at things.</p>
-            <span class="channel-soon">Coming soon</span>
-          </div>
+            <div class="build-bar" role="img" aria-label="Progress: planning"><span style="--p:15%"></span></div>
+          </article>
 
-          <div class="channel-card channel-card--soon">
-            <p class="channel-platform">Twitch</p>
+          <article class="channel-card reveal">
+            <span class="status"><span class="status-dot" aria-hidden="true"></span>Being built</span>
+            <h3 class="channel-platform">Twitch</h3>
             <p class="channel-desc">Live and unfiltered. Watch things go wrong in real time.</p>
-            <span class="channel-soon">Coming soon</span>
-          </div>
+            <div class="build-bar" role="img" aria-label="Progress: idea stage"><span style="--p:8%"></span></div>
+          </article>
 
         </div>
       </div>
     </section>
 
-    <!-- NEWSLETTER -->
     <section class="section section--newsletter" id="newsletter">
       <div class="inner">
-        <p class="section-label">Newsletter</p>
-        <h2 class="section-heading">In your inbox, weekly.</h2>
-        <p class="section-body">Tech, culture, and whatever I'm currently failing at. Free forever.</p>
-        <form class="signup-form" onsubmit="handleSubmit(event)">
-          <input
-            type="email"
-            id="email-input"
-            class="email-input"
-            placeholder="your@email.com"
-            required
-            aria-label="Email address"
-          >
-          <button type="submit" class="btn" id="submit-btn">Sign me up</button>
-        </form>
-        <p class="form-note" id="form-msg" hidden></p>
+        <div class="nl-panel reveal">
+          <p class="section-label">The Newsletter</p>
+          <h2 class="nl-heading">Fail along with me.<br><span>Weekly. Free forever.</span></h2>
+          <p class="nl-lede">Tech, culture, and whatever I'm currently failing at, in one honest email.</p>
+
+          <ul class="nl-gets" aria-label="What you get">
+            <li>One email a week</li>
+            <li>What I tried and what went wrong</li>
+            <li>The lessons, minus the guru voice</li>
+            <li>One-click unsubscribe, no hard feelings</li>
+          </ul>
+
+          <form class="signup-form" id="signup-form" novalidate>
+            <label class="sr-only" for="email-input">Email address</label>
+            <input
+              type="email"
+              id="email-input"
+              class="email-input"
+              name="email"
+              placeholder="your@email.com"
+              autocomplete="email"
+              required
+            >
+            <button type="submit" class="btn" id="submit-btn">Sign me up</button>
+          </form>
+          <p class="form-note" id="form-msg" role="status" aria-live="polite" hidden></p>
+          <p class="nl-fine">No spam. Your email is only used for this newsletter. See the <a href="/privacy.html">privacy policy</a>.</p>
+        </div>
       </div>
     </section>
 
@@ -130,50 +212,23 @@
 
   <footer class="site-footer">
     <div class="inner">
-      <p>&copy; 2026 Failosaurus Rex &middot;
-        <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a> &middot;
-        <a href="/privacy.html">Privacy</a> &middot;
-        <a href="/terms.html">Terms</a>
-      </p>
+      <div class="foot-top">
+        <div>
+          <p class="foot-brand">Failosaurus Rex</p>
+          <p class="foot-tag">For everyone who was never immediately great at anything.</p>
+        </div>
+        <nav class="foot-links" aria-label="Footer">
+          <a href="/archive.php">Archive</a>
+          <a href="/rss.php">RSS</a>
+          <a href="/privacy.html">Privacy</a>
+          <a href="/terms.html">Terms</a>
+          <a href="mailto:hello@failosaurusrex.com">hello@failosaurusrex.com</a>
+        </nav>
+      </div>
+      <p class="foot-copy">&copy; 2026 Failosaurus Rex. Made by hand, with mistakes.</p>
     </div>
   </footer>
 
-  <script>
-    async function handleSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      const msg = document.getElementById('form-msg');
-      const email = document.getElementById('email-input').value;
-
-      btn.disabled = true;
-      btn.textContent = 'Sending…';
-
-      try {
-        const res = await fetch('/subscribe.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
-        const data = await res.json();
-
-        if (res.ok && data.ok) {
-          msg.textContent = 'Almost there — check your inbox to confirm.';
-          msg.style.color = 'var(--accent)';
-          e.target.reset();
-        } else {
-          msg.textContent = data.error || 'Something went wrong. Try again.';
-          msg.style.color = '#ff5040';
-        }
-      } catch {
-        msg.textContent = 'Network error. Try again.';
-        msg.style.color = '#ff5040';
-      }
-
-      msg.hidden = false;
-      btn.disabled = false;
-      btn.textContent = 'Sign me up';
-    }
-  </script>
-
+  <script src="home.js" defer></script>
 </body>
 </html>
