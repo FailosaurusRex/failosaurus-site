@@ -167,6 +167,24 @@ if ($authed) {
                 placeholder="Plain text fallback (for email clients that don't render HTML). Optional but recommended."></textarea>
             </div>
 
+            <div class="admin-field">
+              <label class="admin-label" for="slug">
+                Archive slug <span style="font-weight:400;text-transform:none;">(URL-safe, auto-generated)</span>
+              </label>
+              <input class="admin-input" type="text" id="slug" name="slug" maxlength="120"
+                pattern="[a-z0-9\-]+" title="Lowercase letters, numbers, hyphens only"
+                placeholder="issue-1-what-i-learned-failing-at-x">
+              <p class="hint">Leave blank to skip the archive. Must be unique per issue.</p>
+            </div>
+
+            <div class="admin-field" style="display:flex;align-items:center;gap:0.6rem;">
+              <input type="checkbox" id="publish_archive" name="publish_archive" value="1" checked
+                style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer;">
+              <label for="publish_archive" style="font-size:0.88rem;color:var(--fg-muted);cursor:pointer;">
+                Publish to public archive
+              </label>
+            </div>
+
             <?php if ($sub_count > 0): ?>
               <button type="submit" class="btn" id="send-btn">
                 Send to <?= number_format($sub_count) ?> subscriber<?= $sub_count !== 1 ? 's' : '' ?> →
@@ -209,6 +227,24 @@ if ($authed) {
       doc.write(`<!DOCTYPE html><html><body style="margin:0;padding:16px;background:#110c08;font-family:Arial,sans-serif;color:#ede5d8;">${bodyField.value}</body></html>`);
       doc.close();
     }
+
+    // Auto-generate slug from subject
+    const slugField   = document.getElementById('slug');
+    const subjectField = document.getElementById('subject');
+    let slugEdited = false;
+
+    slugField?.addEventListener('input', () => { slugEdited = true; });
+
+    subjectField?.addEventListener('input', () => {
+      if (slugEdited) return;
+      slugField.value = subjectField.value
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .slice(0, 120);
+    });
 
     document.getElementById('broadcast-form')?.addEventListener('submit', function(e) {
       const btn = document.getElementById('send-btn');
