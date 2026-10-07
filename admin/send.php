@@ -243,7 +243,7 @@ function build_email_html(string $preheader, string $body, string $unsub_url): s
     <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;padding:0 24px;">
       <tr><td>
         <p style="font-size:1rem;font-weight:700;letter-spacing:0.14em;color:#39ff14;margin:0 0 32px;">FRX</p>
-        {$body}
+        <div style="color:#ede5d8;font-size:1rem;line-height:1.75;">{$body}</div>
         <hr style="border:none;border-top:1px solid #2c1f16;margin:40px 0 24px;">
         <p style="font-size:0.75rem;color:#3a342e;margin:0;line-height:1.6;">
           You're receiving this because you signed up at
