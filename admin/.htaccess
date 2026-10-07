@@ -1,0 +1,5 @@
+# Deny direct access to send.php — must come through index.php session
+<Files "send.php">
+  Order Deny,Allow
+  Deny from all
+</Files>
